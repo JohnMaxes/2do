@@ -9,26 +9,28 @@
     font-family: Georgia, 'Times New Roman', Times, serif;
 }
 
+.sideBySide {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    margin: 0px 7.5vw;
+    border: 1px solid black;
+}
+
+.oneSide {
+    width: 50%;
+}
+
 .sectionHeader {
     font-size: 50px; 
     font-weight: 500;
     background-color: white;
     color: black;
-    padding: 15px;
-    margin: 10px;
+
     border-radius: 15px;
     transition: 300ms;
-}
-
-.sideBySide {
     display: flex;
-    flex-direction: row;
     justify-content: center;
-}
-
-.oneSide {
-    width: 49%;
-    border: 2px solid black;
 }
 
 .oneSide:hover .sectionHeader {
