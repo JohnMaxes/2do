@@ -1,8 +1,8 @@
-import { Component, inject, OnInit, signal, ɵisBoundToModule } from '@angular/core';
+import { Component, inject, OnInit, signal } from '@angular/core';
 import { TodoService } from '../../services/todo.service';
 import { Todo } from '../../model/todo.type';
-import { TodoComponent } from '../todo/todo.component';
-import { NewTodoComponent } from '../new-todo/new-todo.component';
+import { TodoComponent } from './todo/todo.component';
+import { NewTodoComponent } from './todo/new-todo/new-todo.component';
 import { ModalComponent } from '../modal/modal.component';
 
 @Component({
@@ -27,7 +27,7 @@ export class TodosComponent implements OnInit{
 
   addingEnabled = signal(false);
   enableAdding() {
-    this.addingEnabled.set(!this.addingEnabled()); // allowing the add new UI to appear/disappear
+    this.addingEnabled.set(!this.addingEnabled());
   }
 
   updateTodoItem(todoItem: Todo) {

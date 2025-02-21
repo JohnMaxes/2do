@@ -1,0 +1,35 @@
+<div class="container">
+    <div class="loginContainer">
+        <h1 style="font-weight: 900; align-self: center;">LOGIN</h1>
+
+        <label for="username">Username</label>
+        <nz-input-group [nzPrefix]="prefixTemplateUser" style="margin-bottom: 10px;">
+            <input type="text" nz-input [(ngModel)]="username" (keyup)="handleEnterKey($event)"/>
+        </nz-input-group>
+        <ng-template #prefixTemplateUser><nz-icon nzType="user" /></ng-template>
+
+        <label for="password">Password</label>
+        <nz-input-group [nzSuffix]="suffixTemplatePassword" [nzPrefix]="prefixTemplatePassword">
+            <input [type]="passwordVisible ? 'text' : 'password'" nz-input [(ngModel)]="password" nzSize="small" (keyup)="handleEnterKey($event)"/>
+        </nz-input-group>
+        <ng-template #suffixTemplatePassword>
+            <span
+              nz-icon
+              class="ant-input-password-icon"
+              [nzType]="passwordVisible ? 'eye-invisible' : 'eye'"
+              (click)="passwordVisible = !passwordVisible"
+            ></span>
+        </ng-template>
+        <ng-template #prefixTemplatePassword><nz-icon nzType="key" nzTheme="outline" /></ng-template>
+
+        <br>
+        @if(this.hasError !== null) {
+            <p>{{this.hasError}}</p>
+        }
+        <button nz-button nzType="primary" class="loginButton" (click)="submitLogin()">
+            @if(this.loading){Loading <nz-icon nzType="sync" [nzSpin]="true" />}@else{Login}
+        </button>
+
+        
+    </div>
+</div>
