@@ -1,0 +1,44 @@
+header {
+    height: 12vh;
+    background-color: black;
+    color: white;
+    display: flex;
+    padding-left: 7.5vw;
+    padding-right: 7.5vw;
+    align-items: center;
+    font-family: Arial, Helvetica, sans-serif;
+}
+
+.navButtonContainer {
+    display: flex; 
+    flex-direction: row;
+    justify-content: end;
+    width: 50%;
+}
+
+.navLogo {
+    font-size: 25px;
+}
+
+#signIn {
+    background-color: #4C5FD5;
+    transition: 300ms;
+    border-color: black;
+}
+
+#signIn:hover {
+    background-color: white;
+    color:black;
+    transition: 250ms;
+}
+
+.navButton {
+    border: 0.2px solid white;
+    border-radius: 7px;
+    color: white;
+    padding: 10px;
+    padding-left: 27px;
+    padding-right: 27px;
+    font-size: 25px;
+    cursor: pointer;
+}

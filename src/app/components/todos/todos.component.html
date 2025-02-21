@@ -1,0 +1,17 @@
+<div class="todoBody">
+    <h2 style="padding: 20px; font-size: 35px; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;">Your Ultimate Procrastination Partner!</h2>
+    @if(deleteModalShown) {<app-modal [message]="modalMessage" (response)="handleModalResponse($event)"></app-modal>}
+    <div class="todoFunctions">
+        <button class="add-button" (click)="enableAdding()">@if(addingEnabled()){Cancel}@else{Add Todo}</button>
+        <button class="toggle-button" (click)="toggleCompletedTodos()">Toggle Completed Todos</button>
+        <button class="delete-button" (click)="initDeleteCompleted()">Delete Completed Todos</button>
+    </div>
+    <ul class="todos">
+        @if(addingEnabled()) {
+            <app-new-todo (newTodo)="addTodoItem($event)"></app-new-todo>
+        }
+        @for (todo of this.todoArray(); track todo.id) {
+            <app-todo [todo]="todo" (todoToggled)="updateTodoItem($event)"></app-todo>
+        }
+    </ul>
+</div>

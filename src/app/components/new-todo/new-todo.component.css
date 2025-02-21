@@ -1,0 +1,13 @@
+li {
+    display: flex;
+    align-items: center;
+    margin-top: 5px;
+    margin-bottom: 5px;
+    flex-direction: row;
+}
+
+input[type='text'] {
+    margin-left: 9px;
+    padding: 4px;
+    width: 90%;
+}
