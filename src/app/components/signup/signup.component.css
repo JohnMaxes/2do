@@ -1,0 +1,29 @@
+.container {
+    display: flex;
+    height: 80%;
+    width: 100%;
+    justify-content: center;
+    align-items: center;
+}
+
+.loginContainer {
+    background-color: white;
+    display: flex;
+    color: black;
+    width: 25%;
+    border-radius: 20px;
+    padding: 30px;
+    flex-direction: column;
+    gap: 5px;
+}
+
+.loginButton {
+    background-color: #4C5FD5;
+    border-color: white;
+    transition: 300ms;
+    height: 40px;
+}
+.loginButton:hover {
+    background-color: black;
+    transition: 300ms;
+}
