@@ -45,7 +45,7 @@
 
         <br>
         @if(this.hasError !== null) {
-            <p>{{this.hasError}}</p>
+            <p>{{this.hasError()}}</p>
         }
         <button nz-button nzType="primary" class="loginButton" (click)="submitSignup()">
             @if(this.loading){Loading <nz-icon nzType="sync" [nzSpin]="true" />}@else{Sign up}

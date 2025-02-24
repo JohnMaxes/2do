@@ -24,10 +24,10 @@
 
         <br>
         @if(this.hasError !== null) {
-            <p>{{this.hasError}}</p>
+            <p>{{this.hasError()}}</p>
         }
         <button nz-button nzType="primary" class="loginButton" (click)="submitLogin()">
-            @if(this.loading){<span>Loading </span> <nz-icon nzType="sync" [nzSpin]="true" />}@else{Login}
+            @if(this.loading() == true){<nz-icon nzType="sync" style="color: white" [nzSpin]="true"/>}@else{Login}
         </button>
 
         

@@ -1,5 +1,6 @@
-import { Component, inject } from '@angular/core';
+import { Component, inject, WritableSignal, signal } from '@angular/core';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { AuthService } from '../../services/auth.service';
 
 import { NzIconModule } from 'ng-zorro-antd/icon';
 import { NzInputModule } from 'ng-zorro-antd/input';
@@ -14,6 +15,8 @@ import { HttpClient } from '@angular/common/http';
 })
 export class SignupComponent {
   http = inject(HttpClient);
+  auth = inject(AuthService);
+
   username: string = 'john@mail.com';
   email: string = 'johndoe@mail.com';
   password: string = 'changeme';
@@ -27,37 +30,25 @@ export class SignupComponent {
   passwordRegex = /^(?=.{8,20}$)[a-zA-Z0-9!#$%^&*]+$/;  
   emailRegex = /^[a-zA-Z0-9._%+-]{3,20}@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
 
-  hasError: string = '';
+  hasError: WritableSignal<string> = signal('');
   handleEnterKey(event: KeyboardEvent) {
     if(event.key == 'Enter') this.submitSignup();
   }
   submitSignup() { // has same logic as login since there's no reliable way to test the signup
-    this.hasError = '';
+    this.hasError.set('');
     if (!this.usernameRegex.test(this.username)) {
-      this.hasError = "User's fault!";
+      this.hasError.set("User's fault!");
     } 
     if (!this.passwordRegex.test(this.password)) {
-      this.hasError += " Password's fault!";
+      this.hasError.set(" Password's fault!");
     }
-    if (this.password != this.repeatPassword) {
-      this.hasError += " Passwords don't match!";
+    if (this.password != this.repeatPassword) { 
+      this.hasError.set("Passwords don't match!");
     }
-    if (this.hasError == '') { // if there's no error
+    if (this.hasError() == '') { // if there's no error
       this.loading = true;
-      const url = 'https://api.escuelajs.co/api/v1/auth/login';
-      this.http.post(url, { email: this.username, password: this.password }, { headers: { 'Content-Type': 'application/json' } }).subscribe( // subscribe == then but in Angular language
-        (response: any) => {
-          this.loading = false;
-          if (response.access_token) {
-            console.log(response.access_token);
-          } else {
-            this.hasError = response.message;
-          }
-        },
-        (error) => {
-          this.loading = false;
-          this.hasError = error.message;
+      this.auth.signup(this.email, this.password, this.hasError);
+      this.loading = false;
       }
-    )}
   }
 }

@@ -1,11 +1,12 @@
-import { Component, inject } from '@angular/core';
+import { Component, inject, signal, WritableSignal } from '@angular/core';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { AuthService } from '../../services/auth.service';
 
 import { NzIconModule } from 'ng-zorro-antd/icon';
 import { NzInputModule } from 'ng-zorro-antd/input';
 import { NzButtonModule } from 'ng-zorro-antd/button';
 import { HttpClient } from '@angular/common/http';
-
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-auth',
@@ -15,42 +16,43 @@ import { HttpClient } from '@angular/common/http';
 })
 export class AuthComponent {
   http = inject(HttpClient);
+  auth = inject(AuthService);
+  router = inject(Router);
+  
   username: string = 'john@mail.com';
   password: string = 'changeme';
 
-  loading = false;
+  loading: WritableSignal<boolean> = signal(false);
 
   usernameRegex = /^[a-zA-Z0-9._%+-]{3,20}@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
   passwordRegex = /^(?=.{8,20}$)[a-zA-Z0-9!#$%^&*]+$/;  passwordVisible: boolean = false;
 
-  hasError: string = '';
+  hasError: WritableSignal<string> = signal('');
+  
   handleEnterKey(event: KeyboardEvent) {
     if(event.key == 'Enter') this.submitLogin();
   }
-  submitLogin() {
-    this.hasError = '';
+
+  async submitLogin() {
+    this.hasError.set('');
     if (this.usernameRegex.test(this.username) == false) {
-      this.hasError = "User's fault!";
+      this.hasError.set("User's fault!");
     } 
     if (!this.passwordRegex.test(this.password)) {
-      this.hasError += " Password's fault!";
+      this.hasError.set(" Password's fault!");
     }
-    if (this.hasError == '') {
-      this.loading = true;
-      const url = 'https://api.escuelajs.co/api/v1/auth/login';
-      this.http.post(url, { email: this.username, password: this.password }, { headers: { 'Content-Type': 'application/json' } }).subscribe(
-        (response: any) => {
-          this.loading = false;
-          if (response.access_token) {
-            console.log(response.access_token);
-          } else {
-            this.hasError = response.message;
-          }
-        },
-        (error) => {
-          this.loading = false;
-          this.hasError = error.message;
+    if (this.hasError() == '') {
+      this.loading.set(true);
+      try {
+        await this.auth.login(this.username, this.password, this.hasError);
+        if(this.hasError() == 'Okay') {
+          this.router.navigate(['/']);
+        }
+      } catch (error: any) {
+        this.hasError.set(error.message);
+      } finally {
+        this.loading.set(false);
       }
-    )}
+    }
   }
 }
