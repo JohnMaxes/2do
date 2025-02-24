@@ -1,0 +1,21 @@
+<div style="display: flex; width: 100vw; flex-direction: row;">
+  <div style="height: 88vh; background-color: white; width:fit-content; overflow-y: auto; box-shadow: 1px 0 7px rgba(0, 0, 0, 0.5);">
+    <ul nz-menu nzMode="inline">
+        <li nz-menu-item nzIcon="setting" style="padding: 30px; font-size: 20px;">
+          <a routerLink="todos"><nz-icon style="font-size: 25px" nzType="form"/><span> </span>Todos</a>
+        </li>
+        <li nz-menu-item nzIcon="setting" style="padding: 30px; font-size: 20px;">
+          <nz-icon style="font-size: 25px" nzType="file-text"/><span> </span>Notes
+        </li>
+        <li nz-menu-item nzIcon="setting" style="padding: 30px; font-size: 20px;">
+          <nz-icon style="font-size: 25px" nzType="user"/><span> </span>Account
+        </li>
+        <li nz-menu-item nzIcon="setting" style="padding: 30px; font-size: 20px;">
+          <nz-icon style="font-size: 25px" nzType="setting"/><span> </span>Settings
+        </li>
+    </ul>
+  </div>
+  <div style="display: flex; height: 88vh; width: 100%; overflow-y: auto;">
+    <router-outlet></router-outlet>
+  </div>
+</div>
