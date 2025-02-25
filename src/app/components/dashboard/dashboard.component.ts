@@ -4,9 +4,9 @@ import { NzIconModule } from 'ng-zorro-antd/icon';
 import { RouterLink, RouterOutlet } from '@angular/router';
 
 @Component({
-  selector: 'app-hw',
+  selector: 'app-dashboard',
   imports: [NzMenuModule, NzIconModule, RouterOutlet, RouterLink],
-  templateUrl: './hw.component.html',
-  styleUrl: './hw.component.css'
+  templateUrl: './dashboard.component.html',
+  styleUrl: './dashboard.component.css'
 })
-export class HwComponent {}
+export class DashboardComponent {}

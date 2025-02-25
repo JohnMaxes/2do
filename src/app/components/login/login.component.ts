@@ -9,12 +9,12 @@ import { HttpClient } from '@angular/common/http';
 import { Router } from '@angular/router';
 
 @Component({
-  selector: 'app-auth',
+  selector: 'app-login',
   imports: [NzInputModule, NzButtonModule, FormsModule, NzIconModule, ReactiveFormsModule],
-  templateUrl: './auth.component.html',
-  styleUrl: './auth.component.css'
+  templateUrl: './login.component.html',
+  styleUrl: './login.component.css'
 })
-export class AuthComponent {
+export class LoginComponent {
   http = inject(HttpClient);
   auth = inject(AuthService);
   router = inject(Router);
@@ -46,7 +46,7 @@ export class AuthComponent {
       try {
         await this.auth.login(this.username, this.password, this.hasError);
         if(this.hasError() == 'Okay') {
-          this.router.navigate(['/']);
+          this.router.navigate(['/dashboard']);
         }
       } catch (error: any) {
         this.hasError.set(error.message);
