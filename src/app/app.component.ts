@@ -19,3 +19,11 @@ export class AppComponent implements OnInit {
     this.auth.initialize();
   }
 }
+
+/*
+<div class="todoFunctions">
+  <button class="add-button" (click)="enableAdding()">@if(addingEnabled()){Cancel}@else{Add Todo}</button>
+  <button class="toggle-button" (click)="toggleCompletedTodos()">Toggle Completed Todos</button>
+  <button class="delete-button" (click)="initDeleteCompleted()">Delete Completed Todos</button>
+</div>
+*/

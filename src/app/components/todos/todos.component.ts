@@ -1,26 +1,27 @@
 import { Component, inject, OnInit, signal } from '@angular/core';
 import { TodoService } from '../../services/todo.service';
 import { Todo } from '../../model/todo.type';
-import { TodoComponent } from './todo/todo.component';
-import { NewTodoComponent } from './todo/new-todo/new-todo.component';
-import { ModalComponent } from '../modal/modal.component';
+import { NzButtonModule } from 'ng-zorro-antd/button';
+import { NzDividerModule } from 'ng-zorro-antd/divider';
+import { NzTableModule } from 'ng-zorro-antd/table';
+import { NzCheckboxModule } from 'ng-zorro-antd/checkbox';
 
 @Component({
   selector: 'app-todos',
-  imports: [TodoComponent, NewTodoComponent, ModalComponent],
+  imports: [NzButtonModule, NzDividerModule, NzTableModule, NzCheckboxModule],
   templateUrl: './todos.component.html',
   styleUrl: './todos.component.css',
   providers: [TodoService]
 })
 export class TodosComponent implements OnInit{
   todoService = inject(TodoService);
-  todoArray = signal<Array<Todo>>([]);
+  todoArray = <Array<Todo>>([]);
   todoBackup: any;
   ngOnInit(): void {
     this.todoService
       .fetchTodos() // call to get data from FakeAPI
       .subscribe((todos) => {
-        this.todoArray.set(todos)
+        this.todoArray = todos;
       });
   }
   
@@ -30,6 +31,8 @@ export class TodosComponent implements OnInit{
     this.addingEnabled.set(!this.addingEnabled());
   }
 
+  
+  /*
   updateTodoItem(todoItem: Todo) {
     console.log(todoItem);
     this.todoArray.update((todos) => {
@@ -42,6 +45,8 @@ export class TodosComponent implements OnInit{
     })
   }
 
+
+
   addTodoItem(newTitle: string) {
     this.todoArray.update(todos => {
       let maxIndex = todos[todos.length - 1].id;
@@ -50,6 +55,7 @@ export class TodosComponent implements OnInit{
       return todos;
     })
   }
+  
 
   todoCompletedToggled = false;
   toggleCompletedTodos() {
@@ -63,7 +69,8 @@ export class TodosComponent implements OnInit{
     }
     this.todoCompletedToggled = !this.todoCompletedToggled;
   }
-
+  
+  @if(deleteModalShown) {<app-modal [message]="modalMessage" (response)="handleModalResponse($event)"></app-modal>}
   deleteModalShown = false;
   modalMessage = 'Are you sure you want to delete the completed todos permanently?'
   initDeleteCompleted() {
@@ -78,4 +85,5 @@ export class TodosComponent implements OnInit{
       this.todoBackup.set(this.todoArray());
     }
   }
+  */
 }
