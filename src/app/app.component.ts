@@ -17,6 +17,5 @@ export class AppComponent implements OnInit {
   router = inject(Router);
   ngOnInit(): void {
     this.auth.initialize();
-    if (this.auth.token) this.router.navigate(['/dashboard']);
   }
 }

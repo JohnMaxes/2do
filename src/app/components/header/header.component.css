@@ -21,9 +21,9 @@ header {
 }
 
 #signIn {
-    background-color: #4C5FD5;
+    background-color: black;
     transition: 300ms;
-    border-color: black;
+    border-color: white;
 }
 
 #signIn:hover {
@@ -33,10 +33,10 @@ header {
 }
 
 .navButton {
-    border: 0.2px solid white;
+    border: 1px solid white;
     border-radius: 7px;
     color: white;
-    padding: 5px 20px;
-    font-size: 25px;
+    padding: 5px 10px;
+    font-size: 20px;
     cursor: pointer;
 }

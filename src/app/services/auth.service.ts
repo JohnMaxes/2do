@@ -10,8 +10,9 @@ export class AuthService {
   token: string = '';
   userObj: object = {};
 
-  async initialize() { // == useEffect()
+  initialize() { // == useEffect()
     localStorage.getItem('token') ? this.token = localStorage.getItem('token') || '' : this.token = '';
+    console.log(this.token);
   }
 
   baseUrl: string = 'https://api.escuelajs.co/api/v1/auth';

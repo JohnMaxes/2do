@@ -1,21 +1,21 @@
 <div style="display: flex; width: 100vw; flex-direction: row;">
-  <div style="height: 88vh; background-color: white; width:fit-content; overflow-y: auto; box-shadow: 1px 0 7px rgba(0, 0, 0, 0.5);">
-    <ul nz-menu nzMode="inline">
-        <li nz-menu-item nzIcon="setting" style="padding: 30px; font-size: 20px;">
+  <div style="height: 88vh; background-color: white; width:fit-content; box-shadow: 1px 0 7px rgba(0, 0, 0, 0.5);">
+    <ul nz-menu nzMode="inline" nzTheme="light">
+        <li nz-menu-item nzMatchRouter="true" style="padding: 30px; font-size: 20px;">
           <a routerLink="todos"><nz-icon style="font-size: 25px" nzType="form"/><span> </span>Todos</a>
         </li>
-        <li nz-menu-item nzIcon="setting" style="padding: 30px; font-size: 20px;">
-          <nz-icon style="font-size: 25px" nzType="file-text"/><span> </span>Notes
+        <li nz-menu-item nzMatchRouter="true" style="padding: 30px; font-size: 20px;">
+          <a routerLink="notes"><nz-icon style="font-size: 25px" nzType="file-text"/><span> </span>Notes</a>
         </li>
-        <li nz-menu-item nzIcon="setting" style="padding: 30px; font-size: 20px;">
-          <nz-icon style="font-size: 25px" nzType="user"/><span> </span>Account
+        <li nz-menu-item nzMatchRouter="true" style="padding: 30px; font-size: 20px;">
+          <a routerLink="account"><nz-icon style="font-size: 25px" nzType="user"/><span> </span>Account</a>
         </li>
-        <li nz-menu-item nzIcon="setting" style="padding: 30px; font-size: 20px;">
-          <nz-icon style="font-size: 25px" nzType="setting"/><span> </span>Settings
+        <li nz-menu-item nzMatchRouter="true" style="padding: 30px; font-size: 20px;">
+          <a routerLink="settings"><nz-icon style="font-size: 25px" nzType="setting"/><span> </span>Settings</a>
         </li>
     </ul>
   </div>
   <div style="display: flex; height: 88vh; width: 100%; overflow-y: auto; justify-content: center;">
-    <router-outlet style></router-outlet>
+    <router-outlet></router-outlet>
   </div>
 </div>
