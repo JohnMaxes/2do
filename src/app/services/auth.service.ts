@@ -1,16 +1,16 @@
 import { inject, Injectable, OnInit, Signal, WritableSignal } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { Observable, firstValueFrom } from 'rxjs';
+import { firstValueFrom } from 'rxjs';
 
 @Injectable({
   providedIn: 'root'
 })
-export class AuthService implements OnInit {
+export class AuthService {
   http = inject(HttpClient); // http request maker
   token: string = '';
   userObj: object = {};
 
-  ngOnInit() { // == useEffect()
+  async initialize() { // == useEffect()
     localStorage.getItem('token') ? this.token = localStorage.getItem('token') || '' : this.token = '';
   }
 
@@ -52,6 +52,11 @@ export class AuthService implements OnInit {
       (error) => {
         signal.set(error.message);
     });
+  }
+
+  logout() {
+    this.token = '';
+    localStorage.removeItem('token');
   }
 
   constructor() { }
