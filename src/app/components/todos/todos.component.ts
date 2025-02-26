@@ -1,5 +1,5 @@
 import { Component, inject, OnInit, signal } from '@angular/core';
-import { TodoService } from '../../services/todo.service';
+import { DashboardService } from '../../services/dashboard.service';
 import { Todo } from '../../model/todo.type';
 import { NzButtonModule } from 'ng-zorro-antd/button';
 import { NzDividerModule } from 'ng-zorro-antd/divider';
@@ -11,18 +11,20 @@ import { NzCheckboxModule } from 'ng-zorro-antd/checkbox';
   imports: [NzButtonModule, NzDividerModule, NzTableModule, NzCheckboxModule],
   templateUrl: './todos.component.html',
   styleUrl: './todos.component.css',
-  providers: [TodoService]
+  providers: [DashboardService]
 })
 export class TodosComponent implements OnInit{
-  todoService = inject(TodoService);
+  service = inject(DashboardService);
   todoArray = <Array<Todo>>([]);
   todoBackup: any;
-  ngOnInit(): void {
-    this.todoService
-      .fetchTodos() // call to get data from FakeAPI
-      .subscribe((todos) => {
-        this.todoArray = todos;
-      });
+
+  async ngOnInit() {
+    if(this.service.todoArr.length === 0) {
+      await this.service.fetchTodos();
+    }
+    if(this.todoArray.length === 0) {
+    this.todoArray = this.service.todoArr;
+    }
   }
   
 

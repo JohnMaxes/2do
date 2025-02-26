@@ -1,4 +1,8 @@
-@if(!this.loading) {
+@if(this.loading) {
+    <div style="width: 88vw; height: 100%; display: flex; justify-content: center; align-content: center;">
+        <nz-icon nzType="loading" nzTheme="outline" style="font-size: 30px"></nz-icon>
+    </div>
+} @else {
     <div style="width: 88vw; height: 88vh; display: flex; flex-direction: column; align-items: center;">
         <div style="display:flex; flex-direction: row; border: 2px solid black; width: 95%; margin-top: 20px; justify-items: center; padding: 20px">
             <nz-avatar [nzSize]="120" [nzSrc]="this.userInfo.avatar"></nz-avatar>
@@ -7,9 +11,5 @@
                 <h3>{{this.userInfo.email}}</h3>
             </div>  
         </div>
-    </div>
-} @else {
-    <div style="width: 88vw; height: 100%; display: flex; justify-content: center; align-content: center;">
-        <nz-icon nzType="loading" nzTheme="outline" style="font-size: 30px"></nz-icon>
     </div>
 }

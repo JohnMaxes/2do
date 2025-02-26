@@ -1,6 +1,6 @@
 import { Component, OnInit, inject } from '@angular/core';
 import { User } from '../../model/user.type';
-import { AuthService } from '../../services/auth.service';
+import { DashboardService } from '../../services/dashboard.service';
 import { NzIconModule } from 'ng-zorro-antd/icon';
 import { NzAvatarModule } from 'ng-zorro-antd/avatar';
 
@@ -8,27 +8,19 @@ import { NzAvatarModule } from 'ng-zorro-antd/avatar';
   selector: 'app-account',
   imports: [NzIconModule, NzAvatarModule],
   templateUrl: './account.component.html',
-  styleUrl: './account.component.css'
+  styleUrl: './account.component.css',
 })
 export class AccountComponent implements OnInit {
-  auth = inject(AuthService);
+  service = inject(DashboardService);
 
   constructor() { }
 
   loading = true;
-  userInfo: User = {
-    id: 0,
-    email: '',
-    password: '',
-    name: '',
-    role: '',
-    avatar: '',
-    creationAt: '',
-    updatedAt: '',
-  };
+  userInfo: any;
+
   async ngOnInit() {
-    await this.auth.getUserInfo();
-    this.userInfo = this.auth.userObj;
+    if(this.service.userInfo.id === 0) await this.service.getUserInfo();
+    else this.userInfo = this.service.userInfo;
     this.loading = false;
   }
 }

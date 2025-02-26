@@ -2,6 +2,7 @@ import { inject, Injectable, OnInit, Signal, WritableSignal } from '@angular/cor
 import { HttpClient } from '@angular/common/http';
 import { firstValueFrom } from 'rxjs';
 import { User } from '../model/user.type';
+import { jwtDecode } from 'jwt-decode';
 
 @Injectable({
   providedIn: 'root'
@@ -9,12 +10,14 @@ import { User } from '../model/user.type';
 export class AuthService {
   http = inject(HttpClient); // http request maker
   token: string = '';
-  userObj: User = { id: 0, name: '',
-    email: '', password: '', role: '', avatar: '', creationAt: '', updatedAt: '' };
+  tokenObj: any = {};
 
   initialize() { // == useEffect()
     localStorage.getItem('token') ? this.token = localStorage.getItem('token') || '' : this.token = '';
-    console.log(this.token);
+    if (this.token) {
+      this.tokenObj = jwtDecode(this.token);
+    }
+    console.log(this.tokenObj);
   }
 
   baseUrl: string = 'https://api.escuelajs.co/api/v1/auth';
@@ -26,7 +29,6 @@ export class AuthService {
         { headers: { 'Content-Type': 'application/json' } }
       ));
       if (response.access_token) {
-        this.getUserInfo()
         this.token = response.access_token;
         localStorage.setItem('token', this.token);
         signal.set('Okay');
@@ -59,20 +61,6 @@ export class AuthService {
     }
     catch (error: any) {
       signal.set(error.message);
-      throw error;
-    }
-  }
-
-  async getUserInfo() {
-    if(this.userObj.id) return;
-    try {
-      const response = await firstValueFrom(this.http.get<User>(`https://api.escuelajs.co/api/v1/auth/profile`, 
-        { headers: { 'Authorization': `Bearer ${this.token}` } }
-      ));
-      this.userObj = response;
-      console.log(this.userObj);
-    } catch (error: any) {
-      console.log(error.message);
       throw error;
     }
   }
