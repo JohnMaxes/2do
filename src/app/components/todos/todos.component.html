@@ -1,23 +1,28 @@
-<div style="height: 85vw; width: 84vw; margin: 20px">
-    <nz-table #basicTable [nzData]="todoArray" [nzSize]="'middle'"
+<div style="margin-left: 5px; overflow-y:hidden; width: 65vw">
+    <nz-table
+    #basicTable
+    [nzData]="todoArray"
+    [nzTotal]="todoArray.length"
+    [nzSize]="'small'"
+    nzFrontPagination="true"
+    nzShowPagination="true"
+    [nzPageSize]="10"
     >
         <thead>
           <tr>
-            <th nzWidth="5%">ID</th>
-            <th nzWidth="40%" style="text-align:left">Title</th>
             <th nzWidth="5%">Status</th>
-            <th nzWidth="20%">Scheduling</th>
-            <th nzWidth="30%" style="text-align: left">Action</th>
+            <th nzWidth="40%" style="text-align:left">Todo</th>
+            <th nzWidth="25%">Scheduling</th>
+            <th nzWidth="15%" style="text-align: left">Action</th>
           </tr>
         </thead>
         <tbody>
-          @for (todo of todoArray; track todo.id) {
+          @for (todo of basicTable.data; track todo.id) {
             <tr>
-              <td>{{ todo.userId }}</td>
-              <td>{{ todo.title }}</td>
-              <td style="display: flex; justify-content: center;">
+              <td nzAlign="center">
                 <label nz-checkbox nzDisabled="false" [nzChecked]="todo.completed"></label>
               </td>
+              <td>{{ todo.title }}</td>
               <td></td>
               <td>
                 <a>Action</a>
