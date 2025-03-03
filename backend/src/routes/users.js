@@ -1,89 +1,61 @@
 const express = require('express');
 const router = express.Router();
-const { Folder, File } = require('../models/models');
+const { User } = require('../models/models');
+const bcrypt = require('bcrypt');
+const jwt = require('jsonwebtoken');
 const mongoose = require('mongoose');
 
-// Get all folders and files for a user
-router.get('/:userId', async (req, res) => {
+// Register a new user
+router.post('/register', async (req, res) => {
   try {
-    const userId = req.params.userId;
-    if (!mongoose.Types.ObjectId.isValid(userId)) {
-      return res.status(400).json({ message: 'Invalid userId' });
+    const { email, password } = req.body;
+    if (!email || !password) {
+      return res.status(400).json({ message: 'Email and password are required' });
     }
 
-    const folders = await Folder.find({ userId: new mongoose.Types.ObjectId(userId) }).populate('folders files');
-    res.json(folders);
-  } catch (err) {
-    console.error('Error getting folders:', err);
-    res.status(500).send({ message: 'Internal Server Error', error: err.message });
-  }
-});
-
-// Add a new folder
-router.post('/', async (req, res) => {
-  try {
-    const { userId, name, parentId } = req.body;
-    if (!userId || !name) {
-      return res.status(400).json({ message: 'userId and name are required' });
+    const existingUser = await User.findOne({ email });
+    if (existingUser) {
+      return res.status(400).json({ message: 'Email already in use' });
     }
 
-    const folder = new Folder({
-      userId: new mongoose.Types.ObjectId(userId),
-      name,
-      folders: [],
-      files: [],
-      parentId: parentId ? new mongoose.Types.ObjectId(parentId) : null
+    const hashedPassword = await bcrypt.hash(password, 10);
+    const user = new User({
+      email,
+      password: hashedPassword
     });
 
-    if (parentId) {
-      const parentFolder = await Folder.findById(new mongoose.Types.ObjectId(parentId));
-      if (!parentFolder) {
-        return res.status(404).json({ message: 'Parent folder not found' });
-      }
-      parentFolder.folders.push(folder._id);
-      await parentFolder.save();
-    }
-
-    await folder.save();
-    res.json(folder);
+    await user.save();
+    console.log(`✅ User ${user._id} registered successfully!`);
+    res.status(201).json({ message: 'User registered successfully', user });
   } catch (err) {
-    console.error('Error adding new folder:', err);
+    console.error('Error registering user:', err);
     res.status(500).send({ message: 'Internal Server Error', error: err.message });
   }
 });
 
-// Recursive function to delete a folder and its contents
-const deleteFolderAndContents = async (folderId) => {
-  const folder = await Folder.findById(folderId).populate('folders files');
-  if (!folder) return;
-
-  // Delete all files in the folder
-  for (const fileId of folder.files) {
-    await File.findByIdAndDelete(fileId);
-  }
-
-  // Recursively delete all subfolders
-  for (const subfolderId of folder.folders) {
-    await deleteFolderAndContents(subfolderId);
-  }
-
-  // Delete the folder itself
-  await Folder.findByIdAndDelete(folderId);
-};
-
-// Delete a folder
-router.delete('/:id', async (req, res) => {
+// Login a user
+router.post('/login', async (req, res) => {
   try {
-    const folderId = req.params.id;
-    if (!mongoose.Types.ObjectId.isValid(folderId)) {
-      return res.status(400).json({ message: 'Invalid folderId' });
+    const { email, password } = req.body;
+    if (!email || !password) {
+      return res.status(400).json({ message: 'Email and password are required' });
     }
 
-    await deleteFolderAndContents(folderId);
+    const user = await User.findOne({ email });
+    if (!user) {
+      return res.status(400).json({ message: 'Invalid email or password' });
+    }
 
-    res.json({ message: 'Folder and its contents deleted' });
+    const isMatch = await bcrypt.compare(password, user.password);
+    if (!isMatch) {
+      return res.status(400).json({ message: 'Invalid email or password' });
+    }
+
+    const token = jwt.sign({ userId: user._id }, 'your_jwt_secret', { expiresIn: '1h' });
+    console.log(`✅ User ${user._id} logged in successfully!`);
+    res.json({ message: 'User logged in successfully', token });
   } catch (err) {
-    console.error('Error deleting folder:', err);
+    console.error('Error logging in user:', err);
     res.status(500).send({ message: 'Internal Server Error', error: err.message });
   }
 });

@@ -46,25 +46,11 @@ router.post('/', upload.single('image'), async (req, res) => {
     }
 
     await file.save();
-    res.json(file);
+    console.log(`✅ File ${file._id} added successfully!`);
+    res.json({ message: 'File added successfully', file });
   } catch (err) {
     console.error('Error adding new file:', err);
     res.status(500).send({ message: 'Internal Server Error', error: err.message });
-  }
-});
-
-// Update a file (note or todo list)
-router.put('/:id', upload.single('image'), async (req, res) => {
-  try {
-    const { title, content, items, parentId } = req.body;
-    const file = await File.findByIdAndUpdate(
-      new mongoose.Types.ObjectId(req.params.id),
-      { title, content, items: items ? JSON.parse(items) : [], parentId: parentId ? new mongoose.Types.ObjectId(parentId) : null, updatedAt: Date.now() },
-      { new: true }
-    );
-    res.json(file);
-  } catch (err) {
-    res.status(500).send(err);
   }
 });
 
@@ -72,7 +58,7 @@ router.put('/:id', upload.single('image'), async (req, res) => {
 router.delete('/:id', async (req, res) => {
   try {
     const fileId = req.params.id;
-    const file = await File.findByIdAndDelete(new mongoose.Types.ObjectId(fileId));
+    const file = await File.findById(fileId);
     if (!file) {
       return res.status(404).json({ message: 'File not found' });
     }
@@ -90,6 +76,8 @@ router.delete('/:id', async (req, res) => {
       }
     }
 
+    await File.findByIdAndDelete(fileId);
+    console.log(`✅ File ${fileId} and associated Todo items deleted successfully!`);
     res.json({ message: 'File and associated Todo items deleted' });
   } catch (err) {
     console.error('Error deleting file:', err);

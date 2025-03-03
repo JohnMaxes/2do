@@ -35,7 +35,7 @@ const todoItemSchema = new mongoose.Schema({
   isDone: { type: Boolean, default: false },
   createdAt: { type: Date, default: Date.now },
   updatedAt: { type: Date, default: Date.now },
-  parentId: { type: mongoose.Schema.Types.ObjectId, ref: 'TodoItem', default: null }
+  todoListId: { type: mongoose.Schema.Types.ObjectId, ref: 'File', required: true }
 });
 
 const User = mongoose.model('User', userSchema);
