@@ -1,6 +1,9 @@
 <div style="display:flex; flex-direction: row; width: calc(100vw - 66px); height: 88vh">
-    <div style="display: flex; width: 20%; height: 88vh; box-shadow: 1px 0 7px rgba(0, 0, 0, 0.5);">
-        <app-tree-view></app-tree-view>
+    @if (showModal) {
+        <app-modal [message]="modalMessage" (response)="handleModalResponse($event) "></app-modal>
+    }
+    <div style="display: flex; width: 20%; height: 88vh; box-shadow: 1px 0 7px rgba(0, 0, 0, 0.5); overflow-y: auto;">
+        <app-tree-view (warnDelete)="triggerModal($event)"></app-tree-view>
     </div>
     <div style="display: flex; width: 80%; height: 88vh;">
         <p>Lmao</p>

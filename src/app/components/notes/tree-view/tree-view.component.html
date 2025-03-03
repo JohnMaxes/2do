@@ -1,30 +1,110 @@
-    <button>Lmao</button>
-    <hr>
-    <nz-tree-view [nzTreeControl]="treeControl" [nzDataSource]="dataSource" [nzDirectoryTree]="true">
-      <nz-tree-node *nzTreeNodeDef="let node" nzTreeNodePadding>
-        <nz-tree-node-toggle nzTreeNodeNoopToggle></nz-tree-node-toggle>
-        <nz-tree-node-option
-          [nzDisabled]="node.disabled"
-          [nzSelected]="selectListSelection.isSelected(node)"
-          (nzClick)="selectListSelection.toggle(node)"
-        >
-          <nz-icon nzType="file" nzTheme="outline" />
-          {{ node.name }}
-        </nz-tree-node-option>
-      </nz-tree-node>
+    <div style="display: flex; align-items: center; height: 50px; margin-left: 10px; font-size: 20px;">
+      <b>Note Manager</b>
+    </div>
+    <hr style="margin: 0px 10px; margin-bottom: 10px;">
+    <div style="margin-left: 10px;">
+      <button nz-button nzType="primary" (click)="addNotePreview('notebook')" nzSize="small" style="margin-right: 2px; background-color: #4CAF50; border-color: #4CAF50;">Create</button>
+      <button nz-button nzType="primary" [disabled]="!selectListSelection.hasValue()" (click)="showDeleteWarn()" nzSize="small" nzDanger>Delete</button>
+    </div>
+    <hr style="margin: 10px 10px;">
+    @if(isLoading) {
+      
+    }
+    @else
+    {
+      <nz-tree-view [nzTreeControl]="treeControl" [nzDataSource]="dataSource" [nzDirectoryTree]="true">
 
-      <nz-tree-node *nzTreeNodeDef="let node; when: hasChild" nzTreeNodePadding>
-        <nz-tree-node-toggle>
-          <nz-icon nzType="caret-down" nzTreeNodeToggleRotateIcon />
-        </nz-tree-node-toggle>
-        <nz-tree-node-option
-          [nzDisabled]="node.disabled"
-          [nzSelected]="selectListSelection.isSelected(node)"
-          (nzClick)="selectListSelection.toggle(node)"
-        >
-          <nz-icon [nzType]="treeControl.isExpanded(node) ? 'folder-open' : 'folder'" nzTheme="outline" />
-          {{ node.name }}
-        </nz-tree-node-option>
-      </nz-tree-node>
-    </nz-tree-view>
+        <nz-tree-node *nzTreeNodeDef="let node" nzTreeNodePadding>
+          <nz-tree-node-toggle nzTreeNodeNoopToggle></nz-tree-node-toggle>
+          <nz-tree-node-option
+            [nzDisabled]="node.disabled"
+            [nzSelected]="selectListSelection.isSelected(node)"
+            (nzClick)="selectListSelection.toggle(node)"
+          >
+            <nz-icon nzType="file-text" nzTheme="outline" />
+            {{ node.name }}
+          </nz-tree-node-option>
+        </nz-tree-node>
+
+        <nz-tree-node *nzTreeNodeDef="let node; when: isEmptyFolder" nzTreeNodePadding>
+          <nz-tree-node-toggle nzTreeNodeNoopToggle></nz-tree-node-toggle>
+          <nz-tree-node-option
+            [nzDisabled]="node.disabled"
+            [nzSelected]="selectListSelection.isSelected(node)"
+            (nzClick)="selectListSelection.toggle(node)"
+          >
+            <nz-icon nzType="folder" nzTheme="outline" />
+            {{ node.name }}
+          </nz-tree-node-option>
+        </nz-tree-node>  
+  
+        <nz-tree-node *nzTreeNodeDef="let node; when: isNote" nzTreeNodePadding>
+          <nz-tree-node-toggle nzTreeNodeNoopToggle></nz-tree-node-toggle>
+          <nz-tree-node-option
+            [nzDisabled]="node.disabled"
+            [nzSelected]="selectListSelection.isSelected(node)"
+            (nzClick)="selectListSelection.toggle(node)"
+          >
+            <nz-icon nzType="file-text" nzTheme="outline" />
+            {{ node.name }}
+          </nz-tree-node-option>
+        </nz-tree-node>
+
+        <nz-tree-node *nzTreeNodeDef="let node; when: isEmptyNotebook" nzTreeNodePadding>
+          <nz-tree-node-toggle nzTreeNodeNoopToggle></nz-tree-node-toggle>
+          <nz-tree-node-option
+            [nzDisabled]="node.disabled"
+            [nzSelected]="selectListSelection.isSelected(node)"
+            (nzClick)="selectListSelection.toggle(node)"
+          >
+            <nz-icon [nzType]="treeControl.isExpanded(node) ? 'read' : 'book'" nzTheme="outline" />
+            {{ node.name }}
+          </nz-tree-node-option>
+        </nz-tree-node>  
+  
+        <nz-tree-node *nzTreeNodeDef="let node; when: isNotebook" nzTreeNodePadding>
+          <nz-tree-node-toggle>
+            <nz-icon nzType="caret-down" nzTreeNodeToggleRotateIcon />
+          </nz-tree-node-toggle>
+          <nz-tree-node-option
+            [nzDisabled]="node.disabled"
+            [nzSelected]="selectListSelection.isSelected(node)"
+            (nzClick)="selectListSelection.toggle(node)"
+          >
+            <nz-icon [nzType]="treeControl.isExpanded(node) ? 'read' : 'book'" nzTheme="outline" />
+            {{ node.name }}
+          </nz-tree-node-option>
+        </nz-tree-node>
+
+        <nz-tree-node *nzTreeNodeDef="let node; when: isFolder" nzTreeNodePadding>
+          <nz-tree-node-toggle>
+            <nz-icon nzType="caret-down" nzTreeNodeToggleRotateIcon />
+          </nz-tree-node-toggle>
+          <nz-tree-node-option
+            [nzDisabled]="node.disabled"
+            [nzSelected]="selectListSelection.isSelected(node)"
+            (nzClick)="selectListSelection.toggle(node)"
+          >
+            <nz-icon [nzType]="treeControl.isExpanded(node) ? 'folder-open' : 'folder'" nzTheme="outline" />
+            {{ node.name }}
+          </nz-tree-node-option>
+        </nz-tree-node>
+
+        <nz-tree-node *nzTreeNodeDef="let node; when: isNewNodePreview" nzTreeNodePadding>
+          <nz-tree-node-toggle nzTreeNodeNoopToggle></nz-tree-node-toggle>
+          <nz-tree-node-option
+            [nzDisabled]="node.disabled"
+            [nzSelected]="selectListSelection.isSelected(node)"
+            (nzClick)="selectListSelection.toggle(node)"
+          >
+            <div style="display: inline-flex; justify-items: center;">
+              <nz-icon [nzType]="this.newNodeIcon" nzTheme="outline" style="margin-right: 5px;"/>
+              <input #newNodeInput type="text" nz-input nzSize="small" [(ngModel)]="newNodeName" (keyup)="handleEnterKey($event)"/>  
+            </div>
+          </nz-tree-node-option>
+        </nz-tree-node>
+
+
+      </nz-tree-view>
+    }
   
