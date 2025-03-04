@@ -54,6 +54,36 @@ router.post('/', upload.single('image'), async (req, res) => {
   }
 });
 
+// Update a file (note or todo list)
+router.put('/:id', async (req, res) => {
+  try {
+    const fileId = req.params.id;
+    const { title, content } = req.body;
+
+    const file = await File.findById(fileId);
+    if (!file) {
+      return res.status(404).json({ message: 'File not found' });
+    }
+
+    if (title) {
+      file.title = title;
+    }
+
+    if (file.type === 'Note' && content) {
+      file.content = content;
+    }
+
+    file.updatedAt = Date.now();
+    await file.save();
+
+    console.log(`✅ File ${fileId} updated successfully!`);
+    res.json({ message: 'File updated successfully', file });
+  } catch (err) {
+    console.error('Error updating file:', err);
+    res.status(500).send({ message: 'Internal Server Error', error: err.message });
+  }
+});
+
 // Delete a file (note or todo list)
 router.delete('/:id', async (req, res) => {
   try {
