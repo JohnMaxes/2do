@@ -1,10 +1,10 @@
 import { Injectable, inject } from '@angular/core';
-import { Todo } from '../model/todo.type';
+import { Tag, Todo } from '../model/todo.type';
 import { HttpClient } from '@angular/common/http';
 import { firstValueFrom } from 'rxjs';
 import { User } from '../model/user.type';
 import { AuthService } from './auth.service';
-import { Node } from '../model/note-node.type';
+import { Node } from '../model/node.type';
 
 @Injectable()
 export class DashboardService {
@@ -41,8 +41,76 @@ export class DashboardService {
   /////////// userInfo
   
   /////////// Todos
-  todoArr: Todo[] = [];
+  todoArr: Todo[] = [
+    {
+      id: '1',
+      tags: ['Shopping'],
+      title: 'Buy groceries',
+      completed: false,
+      createdOn: new Date('2023-01-01'),
+      completedOn: null,
+    },
+    {
+      id: '2',
+      tags: ['Personal'],
+      title: 'Walk the dog',
+      completed: true,
+      createdOn: new Date('2023-01-02'),
+      completedOn: new Date('2023-01-03'),
+    },
+    {
+      id: '3',
+      tags: ['Work'],
+      title: 'Finish project report',
+      completed: false,
+      createdOn: new Date('2023-01-04'),
+      completedOn: null,
+    },
+    {
+      id: '4',
+      tags: ['Finance'],
+      title: 'Call the bank',
+      completed: true,
+      createdOn: new Date('2023-01-05'),
+      completedOn: new Date('2023-01-06'),
+    },
+    {
+      id: '5',
+      tags: ['Household'],
+      title: 'Clean the house',
+      completed: false,
+      createdOn: new Date('2023-01-07'),
+      completedOn: null,
+    },
+    {
+      id: '6',
+      tags: ['Fitness'],
+      title: 'Go for a run',
+      completed: true,
+      createdOn: new Date('2023-01-08'),
+      completedOn: new Date('2023-01-09'),
+    },
+    {
+      id: '7',
+      tags: ['Education'],
+      title: 'Read a book',
+      completed: false,
+      createdOn: new Date('2023-01-10'),
+      completedOn: null,
+    },
+  ];
 
+  todoTagList: Tag[] = [
+    { title: 'Shopping', color: '#FF5733' },
+    { title: 'Personal', color: '#33FF57' },
+    { title: 'Work', color: '#3357FF' },
+    { title: 'Finance', color: '#FF33A1' },
+    { title: 'Household', color: '#FF8C33' },
+    { title: 'Fitness', color: '#33FFF5' },
+    { title: 'Education', color: '#FF33D4' },
+  ];
+
+  /*
   async fetchTodos() {
     try {
       const url = 'https://jsonplaceholder.typicode.com/todos/';
@@ -53,7 +121,7 @@ export class DashboardService {
       console.error(error);
     }
   };
-  constructor() {}
+  */
   /////////// Todos
 
   /////////// Notes

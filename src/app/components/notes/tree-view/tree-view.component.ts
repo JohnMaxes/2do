@@ -5,7 +5,7 @@ import { Component, inject, OnInit, Output, EventEmitter } from '@angular/core';
 import { NzIconModule } from 'ng-zorro-antd/icon';
 import { NzTreeFlatDataSource, NzTreeFlattener, NzTreeViewModule } from 'ng-zorro-antd/tree-view';
 import { NzButtonModule } from 'ng-zorro-antd/button';
-import { Node } from '../../../model/note-node.type';
+import { Node } from '../../../model/node.type';
 import { DashboardService } from '../../../services/dashboard.service';
 import { FormsModule } from '@angular/forms';
 import { NzInputModule } from 'ng-zorro-antd/input';

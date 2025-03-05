@@ -14,8 +14,6 @@ import { DashboardService } from '../../services/dashboard.service';
 export class DashboardComponent {
   service = inject(DashboardService);
   async ngOnInit() {
-    await this.service.fetchTodos();
-    console.log('Todos fetched!');
     await this.service.getUserInfo();
     console.log('User info fetched!');
   }

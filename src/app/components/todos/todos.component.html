@@ -1,36 +1,67 @@
-<div style="margin-left: 5px; overflow-y:hidden; width: 65vw">
-    <nz-table
-    #basicTable
-    [nzData]="todoArray"
-    [nzTotal]="todoArray.length"
-    [nzSize]="'small'"
-    nzFrontPagination="true"
-    nzShowPagination="true"
-    [nzPageSize]="10"
-    >
+@if (showModal) {
+  <app-modal [message]="modalMessage" (response)="handleModalResponse($event) "></app-modal>
+}
+<div style="overflow-y:hidden; width: calc(100% - 5px); height: 100%; display: flex; flex-direction: row; margin-left: 5px">
+  <div style="width: 75%; height: 100%">
+
+    <div style="height: 10%; width: calc(100% - 10px); margin-left: 10px;">
+      <h1 style="font-size: 20px; border: 2px solid black;"><b>Todo Manager</b></h1>
+      <button (click)="logTodos()">Lmao</button>
+    </div>
+
+    <div>
+      <nz-table
+      nzSize="small"
+      [nzScroll]="{ y: '100%' }"
+      [nzData]="[{}]"
+      style="margin-left: 5px; height: 90%; width: 100%; padding-right: 5px;"
+      nzFrontPagination="false"
+      >
         <thead>
           <tr>
-            <th nzWidth="5%">Status</th>
-            <th nzWidth="40%" style="text-align:left">Todo</th>
-            <th nzWidth="25%">Scheduling</th>
-            <th nzWidth="15%" style="text-align: left">Action</th>
+            <th nzWidth="5%"><label nz-checkbox (change)="toggleSelectAll()"></label></th>
+            <th nzWidth="40%" style="text-align:left; padding-left: 20px;">Todo</th>
+            <th nzWidth="30%">Tags</th>
+            <th nzWidth="15%">Created On</th>
+            <th nzWidth="10%" style="text-align: left">Action</th>
           </tr>
         </thead>
-        <tbody>
-          @for (todo of basicTable.data; track todo.id) {
-            <tr>
-              <td nzAlign="center">
-                <label nz-checkbox nzDisabled="false" [nzChecked]="todo.completed"></label>
-              </td>
-              <td>{{ todo.title }}</td>
-              <td></td>
-              <td>
-                <a>Action</a>
-                <nz-divider nzType="vertical"></nz-divider>
-                <a>Delete</a>
-              </td>
-            </tr>
-          }
+        <tbody style="height: 80%">
+          <tr class="editable-row">
+            <td nzAlign="center"><label nz-checkbox nzDisabled="true"></label></td>
+            <td><input (keyup)="handleEnterKey($event)" placeholder="Enter a new Todo here..." type="text" nz-input [(ngModel)]="this.newTodoTitle"/></td>
+            <td><input (keyup)="handleEnterKey($event)" placeholder="Enter..." type="text" nz-input [(ngModel)]="this.newTodoCategory"/></td>
+            <td></td>
+            <td>
+              <button nz-button nzType="primary" class="todo-create-button" (click)="addItem()">Create</button>
+            </td>
+          </tr>
+        @for (data of this.todoArray; track data) {
+          <tr class="editable-row">
+            <td style="padding: 4px" nzAlign="center"><label nz-checkbox [nzChecked]="this.selectedArr.includes(data.id) ? true : false" (change)="toggleSelect(data.id)"></label></td>
+            <td><input type="text" [class.invalid]="(data.title == '')" nz-input [(ngModel)]="data.title" nz-tooltip [nzTooltipVisible]="data.title == '' ? true : false" [nzTooltipTrigger]="null" nzTooltipTitle="Title cannot be empty!" nzTooltipColor="red" [nzTooltipOverlayStyle]="dynamicStyles"></td>
+            <td>
+              <nz-select style="width: 100%; font-size: 12px;" nzMode="multiple" nzPlaceHolder="Select tag..." [(ngModel)]="data.tags">
+                @for (tag of this.todoTagList; track tag) {
+                  <nz-option [nzLabel]="tag.title" [nzValue]="tag.title"></nz-option>
+                }
+              </nz-select>
+            </td>
+            <td><input type="text" nz-input [(ngModel)]="data.completed"/></td>
+            <td>
+              <div style="display: flex; flex-direction: row;">
+                <nz-icon title="Mark this todo as Done" class="todo-action-icon" nzType="check-circle" nzTheme="twotone" nzTwotoneColor="#4CAF50"/>
+                <nz-icon title="Delete this todo forever" (click)="deleteItem(data.id)" class="todo-action-icon" nzType="delete" nzTheme="twotone" nzTwotoneColor="#FF3B3B"/>
+              </div>
+            </td>
+          </tr>
+        }
         </tbody>
-    </nz-table>
+      </nz-table>  
+    </div>
+  </div>
+
+  <div style="width: 25%; height: 100%; border: 1px solid black">
+
+  </div>
 </div>

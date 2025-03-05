@@ -1,91 +1,115 @@
-import { Component, inject, OnInit, signal } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import { DashboardService } from '../../services/dashboard.service';
-import { Todo } from '../../model/todo.type';
+import { Tag, Todo } from '../../model/todo.type';
 import { NzButtonModule } from 'ng-zorro-antd/button';
 import { NzDividerModule } from 'ng-zorro-antd/divider';
 import { NzTableModule } from 'ng-zorro-antd/table';
 import { NzCheckboxModule } from 'ng-zorro-antd/checkbox';
+import { NzInputModule } from 'ng-zorro-antd/input';
+import { FormsModule } from '@angular/forms';
+import { NzIconModule } from 'ng-zorro-antd/icon';
+import { NzSelectModule } from 'ng-zorro-antd/select';
+import { ModalComponent } from '../modal/modal.component';
+import { NzToolTipModule } from 'ng-zorro-antd/tooltip';
+import { ScrollingModule } from '@angular/cdk/scrolling';
+import { NgStyleInterface } from 'ng-zorro-antd/core/types';
+import { NgStyle } from '@angular/common';
+import { NzTagModule } from 'ng-zorro-antd/tag';
+import { TagColorDirective } from './tag-color.directive';
+//import { DatePipe } from '@angular/common';
+
 
 @Component({
   selector: 'app-todos',
-  imports: [NzButtonModule, NzDividerModule, NzTableModule, NzCheckboxModule],
+  imports: [
+    NzButtonModule, 
+    NzDividerModule, 
+    NzTableModule, 
+    NzCheckboxModule, 
+    NzInputModule, 
+    FormsModule, 
+    NzIconModule, 
+    NzSelectModule, 
+    ModalComponent,
+    NzToolTipModule,
+    ScrollingModule,
+    NzTagModule,
+    //TagColorDirective,
+    //DatePipe,
+  ],
   templateUrl: './todos.component.html',
   styleUrl: './todos.component.css',
   providers: [DashboardService]
 })
-export class TodosComponent implements OnInit{
+export class TodosComponent{
   service = inject(DashboardService);
-  todoArray = <Array<Todo>>([]);
+  todoArray: Todo[] = this.service.todoArr;
+  todoTagList: Tag[] = this.service.todoTagList;
   todoBackup: any;
 
-  async ngOnInit() {
-    if(this.service.todoArr.length === 0) {
-      await this.service.fetchTodos();
-    }
-    if(this.todoArray.length === 0) {
-    this.todoArray = this.service.todoArr;
-    }
-  }
-  
+  dynamicStyles: NgStyleInterface = {
+    'font-size': '12px',
+    'padding': '5px',
+  };
 
-  addingEnabled = signal(false);
-  enableAdding() {
-    this.addingEnabled.set(!this.addingEnabled());
-  }
+  newDate = '2025-03-05T12:34:56.789Z';
 
-  
-  /*
-  updateTodoItem(todoItem: Todo) {
-    console.log(todoItem);
-    this.todoArray.update((todos) => {
-      return todos.map(todo => {
-        if(todo.id === todoItem.id) {
-          return {...todo, completed: !todoItem.completed}
-        }
-        return todo;
-      })
-    })
-  }
-
-
-
-  addTodoItem(newTitle: string) {
-    this.todoArray.update(todos => {
-      let maxIndex = todos[todos.length - 1].id;
-      todos.unshift({title: newTitle, id: maxIndex + 2, userId: 0, completed: false});
-      this.addingEnabled.set(false);
-      return todos;
-    })
-  }
-  
-
-  todoCompletedToggled = false;
-  toggleCompletedTodos() {
-    if (this.todoCompletedToggled === false) {
-      this.todoBackup = signal<Todo[]>(this.todoArray());
-      this.todoArray.update(todos => {
-        return todos.filter(todo => !todo.completed);
-      });
+  //////////////////////////////// SELECTION  
+  selectedArr: string[] = [];
+  allSelected: boolean = false;
+  toggleSelect(id: string) {
+    if (this.selectedArr.includes(id)) {
+      this.selectedArr = this.selectedArr.filter(selectedId => selectedId !== id);
     } else {
-      this.todoArray.set(this.todoBackup());
+      this.selectedArr.push(id);
     }
-    this.todoCompletedToggled = !this.todoCompletedToggled;
   }
-  
-  @if(deleteModalShown) {<app-modal [message]="modalMessage" (response)="handleModalResponse($event)"></app-modal>}
-  deleteModalShown = false;
-  modalMessage = 'Are you sure you want to delete the completed todos permanently?'
-  initDeleteCompleted() {
-    this.deleteModalShown = true;
-  }
-  handleModalResponse(result: boolean) {
-    this.deleteModalShown = false;
-    if(result) {
-      this.todoArray.update(todos => {
-        return todos.filter(todo => !todo.completed);
+  toggleSelectAll() {
+    if(this.allSelected) {
+      this.selectedArr = [];
+      this.allSelected = false;
+    } else {
+      this.todoArray.forEach(item => {
+        if(!this.selectedArr.includes(item.id)) this.selectedArr.push(item.id);
       })
-      this.todoBackup.set(this.todoArray());
+      this.allSelected = true;
     }
   }
-  */
+
+  //////////////////////////////// CRUD
+  showModal: boolean = false;
+  modalMessage: string = '';
+  handleModalResponse(res: boolean) {
+    alert(res);
+  }
+
+  newTodoTitle: string = '';
+  newTodoCategory: string = '';
+  newTodoTags: Tag[] = [];
+
+  logTodos() {
+    console.log(this.todoArray);
+  }
+
+  handleEnterKey(event: KeyboardEvent) {
+    if(event.key == 'Enter') this.addItem();
+  }
+  addItem(): void {
+    this.todoArray.unshift(
+      {
+        id: this.newTodoTitle,
+        tags: [],
+        title: this.newTodoTitle,
+        completed: false,
+        completedOn: null,
+        createdOn: new Date,
+      }
+    );
+    this.newTodoTitle = '';
+    this.newTodoCategory = '';
+  }
+
+  deleteItem(id: string): void {
+    this.todoArray = this.todoArray.filter(d => d.id !== id);
+  }
 }

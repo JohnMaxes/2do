@@ -7,3 +7,70 @@ tr th {
 tr {
     height: 50px;
 }
+
+.ant-input {
+    border: none;
+    transition: none;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+input.invalid {
+    border: 1px solid red;
+    box-shadow: 0 0 5px rgba(255, 0, 0, 0.5);
+    transition: 0.4s;
+}
+
+input {
+    font-size: 12px;
+    background-color: inherit;
+}
+
+input:hover {
+    font-size: 12px;
+    background-color: white;
+    border: 1px solid #c5c5c5;
+}
+
+input:focus {
+    background-color: white;
+    box-shadow: 0 0 5px #1890ff;
+    border: 1px solid #c5c5c5;
+}
+
+input.invalid {
+    border: 1px solid red;
+    box-shadow: 0 0 5px rgba(255, 0, 0, 0.5);
+}
+
+input.invalid:hover {
+    border: 1px solid red;
+    box-shadow: 0 0 5px rgba(255, 0, 0, 0.5);
+}
+
+.antinput-disabled {
+    border: 1px solid #c5c5c5;
+}
+
+.todo-action-icon {
+    margin-right: 15px;
+    transform: scale(1.2);
+    cursor: pointer;
+}
+
+.todo-create-button {
+    background-color: #4E8E9D; 
+    border-color: #4E8E9D;
+}
+
+.tooltip-card {
+    font-size: 10px;
+}
+
+.nz-option-item {
+    font-size: 8px;
+}
+
+.dropdown-option {
+    font-size: 12px;
+}
