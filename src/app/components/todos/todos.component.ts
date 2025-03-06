@@ -1,4 +1,4 @@
-import { Component, inject } from '@angular/core';
+import { AfterViewInit, Component, inject, ElementRef, AfterViewChecked } from '@angular/core';
 import { DashboardService } from '../../services/dashboard.service';
 import { Tag, Todo } from '../../model/todo.type';
 import { NzButtonModule } from 'ng-zorro-antd/button';
@@ -16,7 +16,7 @@ import { NgStyleInterface } from 'ng-zorro-antd/core/types';
 import { NgStyle } from '@angular/common';
 import { NzTagModule } from 'ng-zorro-antd/tag';
 import { TagColorDirective } from './tag-color.directive';
-//import { DatePipe } from '@angular/common';
+import { DatePipe } from '@angular/common';
 
 
 @Component({
@@ -34,15 +34,16 @@ import { TagColorDirective } from './tag-color.directive';
     NzToolTipModule,
     ScrollingModule,
     NzTagModule,
-    //TagColorDirective,
-    //DatePipe,
+    DatePipe,
+    TagColorDirective,
   ],
   templateUrl: './todos.component.html',
   styleUrl: './todos.component.css',
   providers: [DashboardService]
 })
-export class TodosComponent{
+export class TodosComponent {
   service = inject(DashboardService);
+  el = inject(ElementRef)
   todoArray: Todo[] = this.service.todoArr;
   todoTagList: Tag[] = this.service.todoTagList;
   todoBackup: any;
@@ -50,6 +51,7 @@ export class TodosComponent{
   dynamicStyles: NgStyleInterface = {
     'font-size': '12px',
     'padding': '5px',
+    'border': 'none',
   };
 
   newDate = '2025-03-05T12:34:56.789Z';
@@ -83,7 +85,8 @@ export class TodosComponent{
     alert(res);
   }
 
-  newTodoTitle: string = '';
+  newTodoTitle: string = 'Lmao';
+  newTodoTitleInvalid: boolean = false;
   newTodoCategory: string = '';
   newTodoTags: Tag[] = [];
 
@@ -95,18 +98,26 @@ export class TodosComponent{
     if(event.key == 'Enter') this.addItem();
   }
   addItem(): void {
-    this.todoArray.unshift(
-      {
-        id: this.newTodoTitle,
-        tags: [],
-        title: this.newTodoTitle,
-        completed: false,
-        completedOn: null,
-        createdOn: new Date,
-      }
-    );
-    this.newTodoTitle = '';
-    this.newTodoCategory = '';
+    if(this.newTodoTitle == '') {
+      this.newTodoTitleInvalid = true;
+      setTimeout(() => {
+        this.newTodoTitleInvalid = false;
+      }, 2000)
+    }
+    else {
+      this.todoArray.unshift(
+        {
+          id: this.newTodoTitle,
+          tags: [],
+          title: this.newTodoTitle,
+          completed: false,
+          completedOn: null,
+          createdOn: new Date,
+        }
+      );
+      //this.newTodoTitle = '';
+      this.newTodoCategory = '';      
+    }
   }
 
   deleteItem(id: string): void {

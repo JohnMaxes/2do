@@ -9,12 +9,12 @@
       <button (click)="logTodos()">Lmao</button>
     </div>
 
-    <div>
+    <div style="height: 90%; width: 100%">
       <nz-table
       nzSize="small"
-      [nzScroll]="{ y: '100%' }"
+      [nzScroll]="{ y: '60vh' }"
       [nzData]="[{}]"
-      style="margin-left: 5px; height: 90%; width: 100%; padding-right: 5px;"
+      style="height: 100%; width: 100%; margin-left: 2px; padding-right: 2px;"
       nzFrontPagination="false"
       >
         <thead>
@@ -26,14 +26,14 @@
             <th nzWidth="10%" style="text-align: left">Action</th>
           </tr>
         </thead>
-        <tbody style="height: 80%">
+        <tbody>
           <tr class="editable-row">
             <td nzAlign="center"><label nz-checkbox nzDisabled="true"></label></td>
-            <td><input (keyup)="handleEnterKey($event)" placeholder="Enter a new Todo here..." type="text" nz-input [(ngModel)]="this.newTodoTitle"/></td>
-            <td><input (keyup)="handleEnterKey($event)" placeholder="Enter..." type="text" nz-input [(ngModel)]="this.newTodoCategory"/></td>
+            <td><input (keyup)="handleEnterKey($event)" placeholder="Enter a new Todo here..." type="text" nz-input [(ngModel)]="this.newTodoTitle" [class.invalid]="(this.newTodoTitle == '' && this.newTodoTitleInvalid)" nz-tooltip nzTooltipTitle="Title cannot be empty!" [nzTooltipTrigger]="null" nzTooltipColor="red" [nzTooltipVisible]="this.newTodoTitleInvalid" [nzTooltipOverlayStyle]="dynamicStyles"/></td>
+            <td><input (keyup)="handleEnterKey($event)" placeholder="Enter tags..." type="text" nz-input [(ngModel)]="this.newTodoCategory"/></td>
             <td></td>
             <td>
-              <button nz-button nzType="primary" class="todo-create-button" (click)="addItem()">Create</button>
+              <button nz-button nzType="primary" class="todo-create-button" (click)="addItem()">C</button>
             </td>
           </tr>
         @for (data of this.todoArray; track data) {
@@ -41,13 +41,13 @@
             <td style="padding: 4px" nzAlign="center"><label nz-checkbox [nzChecked]="this.selectedArr.includes(data.id) ? true : false" (change)="toggleSelect(data.id)"></label></td>
             <td><input type="text" [class.invalid]="(data.title == '')" nz-input [(ngModel)]="data.title" nz-tooltip [nzTooltipVisible]="data.title == '' ? true : false" [nzTooltipTrigger]="null" nzTooltipTitle="Title cannot be empty!" nzTooltipColor="red" [nzTooltipOverlayStyle]="dynamicStyles"></td>
             <td>
-              <nz-select style="width: 100%; font-size: 12px;" nzMode="multiple" nzPlaceHolder="Select tag..." [(ngModel)]="data.tags">
+              <nz-select appTagColor [tagColorArray]="todoTagList" style="width: 100%; font-size: 12px;" nzMode="multiple" nzPlaceHolder="Select tag..." [(ngModel)]="data.tags">
                 @for (tag of this.todoTagList; track tag) {
                   <nz-option [nzLabel]="tag.title" [nzValue]="tag.title"></nz-option>
                 }
               </nz-select>
             </td>
-            <td><input type="text" nz-input [(ngModel)]="data.completed"/></td>
+            <td nzAlign="center" style="font-size: 10px;">{{data.createdOn | date:'dd/MM/yy hh:mm'}}</td>
             <td>
               <div style="display: flex; flex-direction: row;">
                 <nz-icon title="Mark this todo as Done" class="todo-action-icon" nzType="check-circle" nzTheme="twotone" nzTwotoneColor="#4CAF50"/>
