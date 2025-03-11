@@ -10,11 +10,12 @@ import { Node } from '../model/node.type';
 export class DashboardService {
   auth = inject(AuthService);
   http = inject(HttpClient);
+  
   token: string = this.auth.token;
   id = this.auth.tokenObj.sub;
 
-
-  /////////// userInfo
+  /////////// Profile Fetching
+  /////////// Profile Fetching
   userInfo: User = {
     id: 0,
     email: '',
@@ -38,13 +39,16 @@ export class DashboardService {
       console.error(error);
     }
   }
-  /////////// userInfo
-  
-  /////////// Todos
+  /////////// Profile Fetching
+  /////////// Profile Fetching
+
+
+  /////////// Todos Master Data
+  /////////// Todos Master Data
   todoArr: Todo[] = [
     {
       id: '1',
-      tags: ['Shopping'],
+      tags: ['Shopping', 'Personal'],
       title: 'Buy groceries',
       completed: false,
       createdOn: new Date('2023-01-01'),
@@ -52,7 +56,7 @@ export class DashboardService {
     },
     {
       id: '2',
-      tags: ['Personal'],
+      tags: ['Personal', ],
       title: 'Walk the dog',
       completed: true,
       createdOn: new Date('2023-01-02'),
@@ -68,7 +72,7 @@ export class DashboardService {
     },
     {
       id: '4',
-      tags: ['Finance'],
+      tags: ['Finance', 'Work'],
       title: 'Call the bank',
       completed: true,
       createdOn: new Date('2023-01-05'),
@@ -76,7 +80,7 @@ export class DashboardService {
     },
     {
       id: '5',
-      tags: ['Household'],
+      tags: ['Household', 'Personal'],
       title: 'Clean the house',
       completed: false,
       createdOn: new Date('2023-01-07'),
@@ -84,7 +88,7 @@ export class DashboardService {
     },
     {
       id: '6',
-      tags: ['Fitness'],
+      tags: ['Fitness', 'Personal'],
       title: 'Go for a run',
       completed: true,
       createdOn: new Date('2023-01-08'),
@@ -92,7 +96,7 @@ export class DashboardService {
     },
     {
       id: '7',
-      tags: ['Education'],
+      tags: ['Education', 'Personal'],
       title: 'Read a book',
       completed: false,
       createdOn: new Date('2023-01-10'),
@@ -109,21 +113,12 @@ export class DashboardService {
     { title: 'Fitness', color: '#33FFF5' },
     { title: 'Education', color: '#FF33D4' },
   ];
-
-  /*
-  async fetchTodos() {
-    try {
-      const url = 'https://jsonplaceholder.typicode.com/todos/';
-      const response = await firstValueFrom(this.http.get<Todo[]>(url, { params: {userId: this.id} }));
-      this.todoArr = response;
-    }
-    catch (error: any) {
-      console.error(error);
-    }
-  };
-  */
+  /////////// Todos
   /////////// Todos
 
+
+
+  /////////// Notes
   /////////// Notes
   noteArr: Node [] = [
     {
@@ -134,8 +129,8 @@ export class DashboardService {
       updatedAt: new Date(),
       children: [
         { id: '2', name: 'Apple', type: 'folder', createdAt: new Date(), updatedAt: new Date(), children: [] },
-        { id: '3', name: 'Banana', type: 'note', createdAt: new Date(), updatedAt: new Date(), content: 'Banana content' },
-        { id: '4', name: 'Fruit loops', type: 'note', createdAt: new Date(), updatedAt: new Date(), content: 'Fruit loops content' }
+        { id: '3', name: 'Banana', type: 'note', createdAt: new Date(), updatedAt: new Date(), content: '<p>Banana content</p>' },
+        { id: '4', name: 'Fruit loops', type: 'note', createdAt: new Date(), updatedAt: new Date(), content: '<p>Fruit loops content</p>' }
       ]
     },
     {
@@ -152,8 +147,8 @@ export class DashboardService {
           createdAt: new Date(),
           updatedAt: new Date(),
           children: [
-            { id: '7', name: 'Broccoli', type: 'note', createdAt: new Date(), updatedAt: new Date(), content: 'Broccoli content' },
-            { id: '8', name: 'Brussels sprouts', type: 'note', createdAt: new Date(), updatedAt: new Date(), content: 'Brussels sprouts content' }
+            { id: '7', name: 'Broccoli', type: 'note', createdAt: new Date(), updatedAt: new Date(), content: '<p>Broccoli content</p>' },
+            { id: '8', name: 'Brussels sprouts', type: 'note', createdAt: new Date(), updatedAt: new Date(), content: '<p>Brussels sprouts content</p>' }
           ]
         },
         {
@@ -163,8 +158,8 @@ export class DashboardService {
           createdAt: new Date(),
           updatedAt: new Date(),
           children: [
-            { id: '10', name: 'Pumpkins', type: 'note', createdAt: new Date(), updatedAt: new Date(), content: 'Pumpkins content' },
-            { id: '11', name: 'Carrots', type: 'note', createdAt: new Date(), updatedAt: new Date(), content: 'Carrots content' }
+            { id: '10', name: 'Pumpkins', type: 'note', createdAt: new Date(), updatedAt: new Date(), content: '<p>Pumpkins content</p>' },
+            { id: '11', name: 'Carrots', type: 'note', createdAt: new Date(), updatedAt: new Date(), content: '<p>Carrots content</p>' }
           ]
         }
       ]
@@ -175,10 +170,9 @@ export class DashboardService {
       type: 'notebook',
       createdAt: new Date(),
       updatedAt: new Date(),
-      content: 'Notebook content',
       children: [
-        { id: '13', name: 'Notebook 1', type: 'note', createdAt: new Date(), updatedAt: new Date(), content: 'Notebook 1 content' },
-        { id: '14', name: 'Notebook 2', type: 'note', createdAt: new Date(), updatedAt: new Date(), content: 'Notebook 2 content' }
+        { id: '13', name: 'Notebook 1', type: 'note', createdAt: new Date(), updatedAt: new Date(), content: '<p>Notebook 1 content</p>' },
+        { id: '14', name: 'Notebook 2', type: 'note', createdAt: new Date(), updatedAt: new Date(), content: '<p>Notebook 2 content</p>' }
       ]
     },
     {
@@ -187,10 +181,11 @@ export class DashboardService {
       type: 'notebook',
       createdAt: new Date(),
       updatedAt: new Date(),
-      content: 'Notebook content',
       children: [],
     }
   ];
+  currentSelectedNode: Node | undefined;
+  currentExpansionState: Map<string, boolean> | undefined;
   /////////// Notes
-
+  /////////// Notes
 }

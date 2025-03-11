@@ -12,7 +12,7 @@
     }
     @else
     {
-      <nz-tree-view [nzTreeControl]="treeControl" [nzDataSource]="dataSource" [nzDirectoryTree]="true">
+      <nz-tree-view [nzTreeControl]="treeControl" [nzDataSource]="dataSource" [nzDirectoryTree]="true" >
 
         <nz-tree-node *nzTreeNodeDef="let node" nzTreeNodePadding>
           <nz-tree-node-toggle nzTreeNodeNoopToggle></nz-tree-node-toggle>
@@ -43,7 +43,7 @@
           <nz-tree-node-option
             [nzDisabled]="node.disabled"
             [nzSelected]="selectListSelection.isSelected(node)"
-            (nzClick)="selectListSelection.toggle(node)"
+            (nzClick)="handleNoteSelection(node)"
           >
             <nz-icon nzType="file-text" nzTheme="outline" />
             {{ node.name }}

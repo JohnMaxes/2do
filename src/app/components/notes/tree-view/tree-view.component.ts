@@ -173,6 +173,21 @@ export class TreeViewComponent implements OnInit {
   }
   
   @Output() warnDelete = new EventEmitter<string>();
+  @Output() newNoteSelected = new EventEmitter<Node>();
+  @Output() noteDeselected = new EventEmitter();
+
+  handleNoteSelection(node: ExampleFlatNode) {
+    if(this.selectListSelection.isSelected(node)) {
+      console.log('Note deselected!');
+      this.noteDeselected.emit('');
+    }
+    else {
+      console.log('Note selected!');
+      let note = this.findNodeById(this.Notes, node.id);
+      this.newNoteSelected.emit(note);
+    }
+    this.selectListSelection.toggle(node);
+  }
 
   showDeleteWarn() {
     this.warnDelete.emit('This action cannot be reversed. Are you sure?');
@@ -182,6 +197,7 @@ export class TreeViewComponent implements OnInit {
     this.saveExpansionState();
     let selectedId = this.selectListSelection.selected[0].id;
     this.Notes = this.removeNodeById(this.Notes, selectedId);
+    this.noteDeselected.emit();
     this.dataSource.setData(this.Notes);
     this.restoreExpansionState();
   }

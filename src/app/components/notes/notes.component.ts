@@ -2,16 +2,18 @@ import { Component, ViewChild } from '@angular/core';
 import { NzTableModule } from 'ng-zorro-antd/table';
 import { TreeViewComponent } from './tree-view/tree-view.component';
 import { ModalComponent } from '../modal/modal.component';
+import { EditorComponent } from './editor/editor.component';
+import { Node } from '../../model/node.type';
 
 @Component({
   selector: 'app-notes',
-  imports: [NzTableModule, TreeViewComponent, ModalComponent],
+  imports: [NzTableModule, TreeViewComponent, ModalComponent, EditorComponent],
   templateUrl: './notes.component.html',
   styleUrl: './notes.component.css'
 })
 export class NotesComponent {
-  @ViewChild(TreeViewComponent) treeViewComponent!: TreeViewComponent
-
+  @ViewChild(TreeViewComponent) treeViewComponent!: TreeViewComponent;
+  @ViewChild(EditorComponent) editorComponent!: EditorComponent;
   showModal = false;
   modalMessage = '';
   noteIdToDelete: string | null = null;

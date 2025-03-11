@@ -1,1 +1,9 @@
 /* You can add global styles to this file, and also import other style files */
+.center { /*Centering all items in its own container*/
+    display: flex; 
+    flex-direction: column; 
+    height: 100%; 
+    width: 100%; 
+    align-items: center; 
+    justify-content: center;
+}

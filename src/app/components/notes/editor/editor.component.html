@@ -1,0 +1,20 @@
+@if(targetDocument == null) {
+    <div class="center">
+        <p style="font-size: large; font-weight: 500;">Pick a note to start editing!</p>
+    </div>
+}
+@else {
+    @if(isLoading) {
+        <div class="center">
+            <nz-icon nzType="loading" nzTheme="outline" nzRotate="true" style="transform: scale(2); margin-bottom: 10px;"/>
+            <p style="font-size: 15px;">Loading</p>
+        </div>
+    }
+    @else {
+        <div class="editorContainer" style="height: 100%;">
+            <p>Banana</p>
+            <quill-editor [(ngModel)]="text" [styles]="{height: '400px'}"></quill-editor>
+        </div>
+    }    
+}
+

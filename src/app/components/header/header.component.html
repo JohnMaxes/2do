@@ -1,8 +1,8 @@
 <header>
     <div class="navLogo" style="width: 50%">
-      <a [routerLink]="" style="color:white; text-decoration: none; font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;"><b>2DO</b> - Never Forget Things Again</a>
+      <a href="/" style="color:white; text-decoration: none; font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;"><b>2DO</b> - Never Forget Things Again</a>
     </div>
     <div class="navButtonContainer">
-      <a [routerLink]="this.loggedIn? '/dashboard' : '/login'"><button class="navButton" id="signIn">{{this.loggedIn ? 'Dashboard' : 'Login'}}</button></a>
+      <a [href]="this.loggedIn? '/dashboard' : '/login'"><button class="navButton" id="signIn">{{this.loggedIn ? 'Dashboard' : 'Login'}}</button></a>
     </div>
 </header>

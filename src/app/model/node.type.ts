@@ -19,7 +19,7 @@ interface BaseNode {
   
   interface NotebookNode extends BaseNode {
     type: 'notebook';
-    content?: string;
+    content?: never;
     children?: Node[];
   }
 

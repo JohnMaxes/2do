@@ -4,24 +4,43 @@
 <div style="overflow-y:hidden; width: calc(100% - 5px); height: 100%; display: flex; flex-direction: row; margin-left: 5px">
   <div style="width: 75%; height: 100%">
 
-    <div style="height: 10%; width: calc(100% - 10px); margin-left: 10px;">
+    <div style="height: 20%; width: calc(100% - 10px); margin-left: 10px;">
       <h1 style="font-size: 20px; border: 2px solid black;"><b>Todo Manager</b></h1>
-      <button (click)="logTodos()">Lmao</button>
+      <button>Lmao</button>
     </div>
 
-    <div style="height: 90%; width: 100%">
+    <div style="height: 80%; width: 100%; border: 2px solid black">
       <nz-table
+      #somethingTable
       nzSize="small"
-      [nzScroll]="{ y: '60vh' }"
+      [nzScroll]="{ y: '20%' }"
       [nzData]="[{}]"
-      style="height: 100%; width: 100%; margin-left: 2px; padding-right: 2px;"
+      style="height: 100%; width: 100%; margin-left: 2px; padding-right: 2px; font-size: 12px;"
       nzFrontPagination="false"
       >
         <thead>
           <tr>
             <th nzWidth="5%"><label nz-checkbox (change)="toggleSelectAll()"></label></th>
             <th nzWidth="40%" style="text-align:left; padding-left: 20px;">Todo</th>
-            <th nzWidth="30%">Tags</th>
+            <th nzWidth="30%">
+              <div style="display: inline-flex; width: 100%">
+                <div style="width: 90%;">
+                  Tags
+                </div>
+                <div style="width: 10%; display: flex; justify-items: center; align-items: center;" >
+                  <a nz-dropdown [nzDropdownMenu]="menu" nzPlacement="bottomRight" nzClickHide="false">
+                    <nz-icon nzType="filter" nzTheme="outline" style="transform: scale(1.1);"/>
+                  </a>
+                  <nz-dropdown-menu #menu="nzDropdownMenu">
+                    <ul nz-menu>
+                      @for (tag of this.listOfTags; track tag) {
+                        <li nz-menu-item><label (nzCheckedChange)="filter()" nz-checkbox [(ngModel)]="tag.checked" style="font-size: 12px">{{tag.title}}</label></li>
+                      }  
+                    </ul>
+                  </nz-dropdown-menu>
+                </div>
+                </div>
+            </th>
             <th nzWidth="15%">Created On</th>
             <th nzWidth="10%" style="text-align: left">Action</th>
           </tr>
@@ -29,7 +48,7 @@
         <tbody>
           <tr class="editable-row">
             <td nzAlign="center"><label nz-checkbox nzDisabled="true"></label></td>
-            <td><input (keyup)="handleEnterKey($event)" placeholder="Enter a new Todo here..." type="text" nz-input [(ngModel)]="this.newTodoTitle" [class.invalid]="(this.newTodoTitle == '' && this.newTodoTitleInvalid)" nz-tooltip nzTooltipTitle="Title cannot be empty!" [nzTooltipTrigger]="null" nzTooltipColor="red" [nzTooltipVisible]="this.newTodoTitleInvalid" [nzTooltipOverlayStyle]="dynamicStyles"/></td>
+            <td><input (keyup)="handleEnterKey($event)" placeholder="Enter a new Todo here..." type="text" nz-input [(ngModel)]="this.newTodoTitle" [class.invalid]="(this.newTodoTitle == '' && this.newTodoTitleInvalid)" nz-tooltip nzTooltipTitle="Title cannot be empty!" [nzTooltipTrigger]="null" nzTooltipColor="red" [nzTooltipVisible]="this.newTodoTitleInvalid" [nzTooltipOverlayStyle]="dynamicTooltipStyles"/></td>
             <td><input (keyup)="handleEnterKey($event)" placeholder="Enter tags..." type="text" nz-input [(ngModel)]="this.newTodoCategory"/></td>
             <td></td>
             <td>
@@ -39,7 +58,7 @@
         @for (data of this.todoArray; track data) {
           <tr class="editable-row">
             <td style="padding: 4px" nzAlign="center"><label nz-checkbox [nzChecked]="this.selectedArr.includes(data.id) ? true : false" (change)="toggleSelect(data.id)"></label></td>
-            <td><input type="text" [class.invalid]="(data.title == '')" nz-input [(ngModel)]="data.title" nz-tooltip [nzTooltipVisible]="data.title == '' ? true : false" [nzTooltipTrigger]="null" nzTooltipTitle="Title cannot be empty!" nzTooltipColor="red" [nzTooltipOverlayStyle]="dynamicStyles"></td>
+            <td><input type="text" [class.invalid]="(data.title == '')" nz-input [(ngModel)]="data.title" nz-tooltip [nzTooltipVisible]="data.title == '' ? true : false" [nzTooltipTrigger]="null" nzTooltipTitle="Title cannot be empty!" nzTooltipColor="red" [nzTooltipOverlayStyle]="dynamicTooltipStyles"></td>
             <td>
               <nz-select appTagColor [tagColorArray]="todoTagList" style="width: 100%; font-size: 12px;" nzMode="multiple" nzPlaceHolder="Select tag..." [(ngModel)]="data.tags">
                 @for (tag of this.todoTagList; track tag) {
