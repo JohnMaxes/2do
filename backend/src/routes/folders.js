@@ -26,6 +26,59 @@ const deleteFolderRecursive = async (folderId) => {
 };
 
 // Get all folders and files for a user
+
+/**
+ * @swagger
+ * components:
+ *   schemas:
+ *     Folder:
+ *       type: object
+ *       required:
+ *         - userId
+ *         - name
+ *       properties:
+ *         userId:
+ *           type: string
+ *           description: The user ID
+ *         name:
+ *           type: string
+ *           description: The folder name
+ *         parentId:
+ *           type: string
+ *           description: The parent folder ID
+ *       example:
+ *         userId: 60d0fe4f5311236168a109ca
+ *         name: Sample Folder
+ *         parentId: 60d0fe4f5311236168a109cb
+ */
+
+/**
+ * @swagger
+ * /api/folders/{userId}:
+ *   get:
+ *     summary: Get all folders and files for a user
+ *     tags: [Folders]
+ *     parameters:
+ *       - in: path
+ *         name: userId
+ *         schema:
+ *           type: string
+ *         required: true
+ *         description: The user ID
+ *     responses:
+ *       200:
+ *         description: A list of folders and files
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: array
+ *               items:
+ *                 $ref: '#/components/schemas/Folder'
+ *       400:
+ *         description: Invalid userId
+ *       500:
+ *         description: Some server error
+ */
 router.get('/:userId', async (req, res) => {
   try {
     const userId = req.params.userId;
@@ -42,6 +95,33 @@ router.get('/:userId', async (req, res) => {
 });
 
 // Add a new folder
+
+/**
+ * @swagger
+ * /api/folders:
+ *   post:
+ *     summary: Create a new folder
+ *     tags: [Folders]
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             $ref: '#/components/schemas/Folder'
+ *     responses:
+ *       200:
+ *         description: The folder was successfully created
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/Folder'
+ *       400:
+ *         description: Bad request
+ *       404:
+ *         description: Parent folder not found
+ *       500:
+ *         description: Some server error
+ */
 router.post('/', async (req, res) => {
   try {
     const { userId, name, parentId } = req.body;
@@ -76,6 +156,29 @@ router.post('/', async (req, res) => {
 });
 
 // Delete a folder and its contents
+/**
+ * @swagger
+ * /api/folders/{id}:
+ *   delete:
+ *     summary: Delete a folder and its contents
+ *     tags: [Folders]
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         schema:
+ *           type: string
+ *         required: true
+ *         description: The folder ID
+ *     responses:
+ *       200:
+ *         description: The folder and its contents were successfully deleted
+ *       400:
+ *         description: Invalid folderId
+ *       404:
+ *         description: Folder not found
+ *       500:
+ *         description: Some server error
+ */
 router.delete('/:id', async (req, res) => {
   try {
     const folderId = req.params.id;

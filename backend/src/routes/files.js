@@ -18,6 +18,73 @@ const storage = multer.diskStorage({
 const upload = multer({ storage: storage });
 
 // Add a new file (note or todo list)
+
+/**
+ * @swagger
+ * components:
+ *   schemas:
+ *     File:
+ *       type: object
+ *       required:
+ *         - userId
+ *         - type
+ *         - title
+ *       properties:
+ *         userId:
+ *           type: string
+ *           description: The user ID
+ *         type:
+ *           type: string
+ *           description: The file type (Note or TodoList)
+ *         title:
+ *           type: string
+ *           description: The file title
+ *         content:
+ *           type: string
+ *           description: The file content (for notes)
+ *         items:
+ *           type: array
+ *           items:
+ *             type: string
+ *           description: The todo items (for todo lists)
+ *         parentId:
+ *           type: string
+ *           description: The parent folder ID
+ *       example:
+ *         userId: 60d0fe4f5311236168a109ca
+ *         type: Note
+ *         title: Sample Note
+ *         content: This is a sample note.
+ *         items: []
+ *         parentId: 60d0fe4f5311236168a109cb
+ */
+
+/**
+ * @swagger
+ * /api/files:
+ *   post:
+ *     summary: Add a new file (note or todo list)
+ *     tags: [Files]
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             $ref: '#/components/schemas/File'
+ *     responses:
+ *       200:
+ *         description: The file was successfully created
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/File'
+ *       400:
+ *         description: Bad request
+ *       404:
+ *         description: Parent folder not found
+ *       500:
+ *         description: Some server error
+ */
 router.post('/', upload.single('image'), async (req, res) => {
   try {
     const { userId, type, title, content, items, parentId } = req.body;
@@ -55,6 +122,46 @@ router.post('/', upload.single('image'), async (req, res) => {
 });
 
 // Update a file (note or todo list)
+/**
+ * @swagger
+ * /api/files/{id}:
+ *   put:
+ *     summary: Update a file (note or todo list)
+ *     tags: [Files]
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         schema:
+ *           type: string
+ *         required: true
+ *         description: The file ID
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               title:
+ *                 type: string
+ *                 description: The file title
+ *               content:
+ *                 type: string
+ *                 description: The file content (for notes)
+ *     responses:
+ *       200:
+ *         description: The file was successfully updated
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/File'
+ *       400:
+ *         description: Bad request
+ *       404:
+ *         description: File not found
+ *       500:
+ *         description: Some server error
+ */
 router.put('/:id', async (req, res) => {
   try {
     const fileId = req.params.id;
@@ -85,6 +192,30 @@ router.put('/:id', async (req, res) => {
 });
 
 // Delete a file (note or todo list)
+
+/**
+ * @swagger
+ * /api/files/{id}:
+ *   delete:
+ *     summary: Delete a file (note or todo list)
+ *     tags: [Files]
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         schema:
+ *           type: string
+ *         required: true
+ *         description: The file ID
+ *     responses:
+ *       200:
+ *         description: The file and its associated Todo items were successfully deleted
+ *       400:
+ *         description: Invalid fileId
+ *       404:
+ *         description: File not found
+ *       500:
+ *         description: Some server error
+ */
 router.delete('/:id', async (req, res) => {
   try {
     const fileId = req.params.id;

@@ -4,6 +4,68 @@ const { TodoItem, File } = require('../models/models');
 const mongoose = require('mongoose');
 
 // Get all todo items for a todo list
+/**
+ * @swagger
+ * components:
+ *   schemas:
+ *     TodoItem:
+ *       type: object
+ *       required:
+ *         - todoListId
+ *         - description
+ *       properties:
+ *         todoListId:
+ *           type: string
+ *           description: The ID of the todo list
+ *         description:
+ *           type: string
+ *           description: The description of the todo item
+ *         isDone:
+ *           type: boolean
+ *           description: The status of the todo item
+ *         createdAt:
+ *           type: string
+ *           format: date-time
+ *           description: The creation date of the todo item
+ *         updatedAt:
+ *           type: string
+ *           format: date-time
+ *           description: The last update date of the todo item
+ *       example:
+ *         todoListId: 60d0fe4f5311236168a109ca
+ *         description: Sample Todo Item
+ *         isDone: false
+ *         createdAt: 2021-06-22T14:48:00.000Z
+ *         updatedAt: 2021-06-22T14:48:00.000Z
+ */
+
+/**
+ * @swagger
+ * /api/todoitems/{todoListId}:
+ *   get:
+ *     summary: Get all todo items for a todo list
+ *     tags: [TodoItems]
+ *     parameters:
+ *       - in: path
+ *         name: todoListId
+ *         schema:
+ *           type: string
+ *         required: true
+ *         description: The ID of the todo list
+ *     responses:
+ *       200:
+ *         description: A list of todo items
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: array
+ *               items:
+ *                 $ref: '#/components/schemas/TodoItem'
+ *       400:
+ *         description: Invalid todoListId
+ *       500:
+ *         description: Some server error
+ */
 router.get('/:todoListId', async (req, res) => {
   try {
     const todoListId = req.params.todoListId;
@@ -20,6 +82,30 @@ router.get('/:todoListId', async (req, res) => {
 });
 
 // Add a new todo item
+/**
+ * @swagger
+ * /api/todoitems:
+ *   post:
+ *     summary: Add a new todo item
+ *     tags: [TodoItems]
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             $ref: '#/components/schemas/TodoItem'
+ *     responses:
+ *       200:
+ *         description: The todo item was successfully created
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/TodoItem'
+ *       400:
+ *         description: Bad request
+ *       500:
+ *         description: Some server error
+ */
 router.post('/', async (req, res) => {
   try {
     const { todoListId, description } = req.body;
@@ -47,6 +133,46 @@ router.post('/', async (req, res) => {
 });
 
 // Update a todo item
+/**
+ * @swagger
+ * /api/todoitems/{id}:
+ *   put:
+ *     summary: Update a todo item
+ *     tags: [TodoItems]
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         schema:
+ *           type: string
+ *         required: true
+ *         description: The ID of the todo item
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               description:
+ *                 type: string
+ *                 description: The description of the todo item
+ *               isDone:
+ *                 type: boolean
+ *                 description: The status of the todo item
+ *     responses:
+ *       200:
+ *         description: The todo item was successfully updated
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/TodoItem'
+ *       400:
+ *         description: Bad request
+ *       404:
+ *         description: Todo item not found
+ *       500:
+ *         description: Some server error
+ */
 router.put('/:id', async (req, res) => {
   try {
     const { description, isDone } = req.body;
@@ -64,6 +190,29 @@ router.put('/:id', async (req, res) => {
 });
 
 // Delete a todo item
+/**
+ * @swagger
+ * /api/todoitems/{id}:
+ *   delete:
+ *     summary: Delete a todo item
+ *     tags: [TodoItems]
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         schema:
+ *           type: string
+ *         required: true
+ *         description: The ID of the todo item
+ *     responses:
+ *       200:
+ *         description: The todo item was successfully deleted
+ *       400:
+ *         description: Invalid todo item ID
+ *       404:
+ *         description: Todo item not found
+ *       500:
+ *         description: Some server error
+ */
 router.delete('/:id', async (req, res) => {
   try {
     await TodoItem.findByIdAndDelete(new mongoose.Types.ObjectId(req.params.id));
