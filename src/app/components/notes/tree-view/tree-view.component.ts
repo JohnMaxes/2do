@@ -1,6 +1,6 @@
 import { SelectionModel } from '@angular/cdk/collections';
 import { FlatTreeControl } from '@angular/cdk/tree';
-import { Component, inject, OnInit, Output, EventEmitter } from '@angular/core';
+import { Component, inject, OnInit, Output, EventEmitter, OnChanges, SimpleChanges, AfterViewChecked, ElementRef } from '@angular/core';
 
 import { NzIconModule } from 'ng-zorro-antd/icon';
 import { NzTreeFlatDataSource, NzTreeFlattener, NzTreeViewModule } from 'ng-zorro-antd/tree-view';
@@ -26,21 +26,25 @@ interface ExampleFlatNode {
   selector: 'app-tree-view',
   imports: [NzIconModule, NzTreeViewModule, NzButtonModule, FormsModule, NzInputModule],
   templateUrl: './tree-view.component.html',
-  providers: [DashboardService]
 })
-export class TreeViewComponent implements OnInit {
+export class TreeViewComponent implements OnInit, AfterViewChecked {
   isLoading = true;
-  service = inject(DashboardService);
   Notes: Node[];
-
   /////////////////////////// Render
-  ngOnInit(): void {
-    this.isLoading = false;
-  }
-
-  constructor () {
+  constructor (private el: ElementRef, private service: DashboardService) {
     this.Notes = this.service.noteArr;
     this.dataSource.setData(this.Notes);
+  }
+
+  ngOnInit() {
+    if(this.service.currentExpansionState !== undefined) {
+      this.expansionState = this.service.currentExpansionState;
+      this.restoreExpansionState();
+      console.log('expansion state restored from service');
+      console.log(this.expansionState);
+    }
+    console.log(this.service.currentExpansionState);
+    this.isLoading = false;
   }
 
   isFolder = (_:number, node: ExampleFlatNode): boolean => (node.type === 'folder');
@@ -52,14 +56,13 @@ export class TreeViewComponent implements OnInit {
   //////////////////////////// Render
 
 
-
   //////////////////////////// Note CRUD
   //////////////////////////// Note CRUD  
   newNodeType: string = '';
   newNodeName: string = '';
   newNodeIcon: string = '';
   newNodeParentRef: any;
-  expansionState = new Map<string, boolean>();
+  expansionState: Map<string, boolean> | undefined = undefined;
 
   getNode(id: string): ExampleFlatNode | null {
     return this.treeControl.dataNodes.find(n => n.id === id) || null;
@@ -71,6 +74,16 @@ export class TreeViewComponent implements OnInit {
       parent = this.getNode(this.newNodeParentRef.id);
       if(parent) this.treeControl.expand(parent);
     }
+  }
+
+  ngAfterViewChecked() {
+    let toggleButtons = this.el.nativeElement.querySelectorAll('nz-tree-node-toggle:not([myDirective])');
+    toggleButtons.forEach((button: HTMLElement) => {
+      button.onclick = () => {
+        console.log('expansion toggled');
+        this.saveExpansionState();
+      }
+    })
   }
 
   focusItem(id: string) {
@@ -95,14 +108,17 @@ export class TreeViewComponent implements OnInit {
 
   saveExpansionState() {
     this.expansionState = new Map<string, boolean>();
+    this.service.currentExpansionState = new Map<string,boolean>();
     this.treeControl.dataNodes.forEach(node => {
-      this.expansionState.set(node.id, this.treeControl.isExpanded(node));
+      this.expansionState!.set(node.id, this.treeControl.isExpanded(node));
     });
+    this.service.currentExpansionState = this.expansionState;
+    console.log(this.service.currentExpansionState);
   }
 
   restoreExpansionState() {
     this.treeControl.dataNodes.forEach(node => {
-      if (this.expansionState.get(node.id)) {
+      if (this.expansionState!.get(node.id)) {
         this.treeControl.expand(node);
       } else {
         this.treeControl.collapse(node);

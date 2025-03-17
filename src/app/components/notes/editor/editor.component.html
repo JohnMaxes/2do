@@ -11,9 +11,8 @@
         </div>
     }
     @else {
-        <div class="editorContainer" style="height: 100%;">
-            <p>Banana</p>
-            <quill-editor [(ngModel)]="text" [styles]="{height: '400px'}"></quill-editor>
+        <div class="editorContainer" style="height: 100%; margin-left: 5px">
+            <quill-editor [(ngModel)]="text" format="json" [styles]="{height: '78vh', width: '75vw'}" [modules]="quillModules"></quill-editor>
         </div>
     }    
 }

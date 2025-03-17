@@ -3,7 +3,7 @@ import { NzTableModule } from 'ng-zorro-antd/table';
 import { TreeViewComponent } from './tree-view/tree-view.component';
 import { ModalComponent } from '../modal/modal.component';
 import { EditorComponent } from './editor/editor.component';
-import { Node } from '../../model/node.type';
+import { DashboardService } from '../../services/dashboard.service';
 
 @Component({
   selector: 'app-notes',
@@ -12,6 +12,7 @@ import { Node } from '../../model/node.type';
   styleUrl: './notes.component.css'
 })
 export class NotesComponent {
+  constructor(private service: DashboardService) {}
   @ViewChild(TreeViewComponent) treeViewComponent!: TreeViewComponent;
   @ViewChild(EditorComponent) editorComponent!: EditorComponent;
   showModal = false;

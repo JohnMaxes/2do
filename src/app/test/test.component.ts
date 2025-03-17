@@ -1,12 +1,10 @@
-import { Component } from "@angular/core";
-import { QuillModule } from 'ngx-quill'
+import { Component, AfterViewInit, Injector, ApplicationRef } from '@angular/core';
 
 @Component({
-    selector: "app-test",
-    imports: [QuillModule],
-    templateUrl: "./test.component.html",
-    styleUrls: ["./test.component.css"],
+    selector: 'app-test',
+    templateUrl: './test.component.html',
+    styleUrls: ['./test.component.css'],
 })
 export class TestComponent {
-
+    constructor(private injector: Injector, private appRef: ApplicationRef) {}
 }

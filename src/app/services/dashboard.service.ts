@@ -1,4 +1,4 @@
-import { Injectable, inject } from '@angular/core';
+import { Injectable, OnInit, Signal, inject } from '@angular/core';
 import { Tag, Todo } from '../model/todo.type';
 import { HttpClient } from '@angular/common/http';
 import { firstValueFrom } from 'rxjs';
@@ -8,13 +8,15 @@ import { Node } from '../model/node.type';
 
 @Injectable()
 export class DashboardService {
-  auth = inject(AuthService);
-  http = inject(HttpClient);
-  
-  token: string = this.auth.token;
-  id = this.auth.tokenObj.sub;
+  token: string;
+  id: string;
+  constructor(private auth: AuthService, private http: HttpClient) {
+    console.log('service init!');
+    this.token = this.auth.token;
+    this.id = this.auth.tokenObj.sub;
+    this.currentExpansionState = undefined;
+  }
 
-  /////////// Profile Fetching
   /////////// Profile Fetching
   userInfo: User = {
     id: 0,
@@ -28,7 +30,9 @@ export class DashboardService {
   };
 
   async getUserInfo() {
-    if(this.userInfo.id) return;
+    if(!this.userInfo.id) {
+      console.log('token expired or something');
+    };
     try {
       const response = await firstValueFrom(this.http.get<User>(`https://api.escuelajs.co/api/v1/auth/profile`, 
         { headers: { 'Authorization': `Bearer ${this.token}` } }
@@ -40,10 +44,8 @@ export class DashboardService {
     }
   }
   /////////// Profile Fetching
-  /////////// Profile Fetching
 
 
-  /////////// Todos Master Data
   /////////// Todos Master Data
   todoArr: Todo[] = [
     {
@@ -114,11 +116,7 @@ export class DashboardService {
     { title: 'Education', color: '#FF33D4' },
   ];
   /////////// Todos
-  /////////// Todos
 
-
-
-  /////////// Notes
   /////////// Notes
   noteArr: Node [] = [
     {
@@ -184,8 +182,8 @@ export class DashboardService {
       children: [],
     }
   ];
+  
   currentSelectedNode: Node | undefined;
   currentExpansionState: Map<string, boolean> | undefined;
-  /////////// Notes
   /////////// Notes
 }

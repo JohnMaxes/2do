@@ -6,10 +6,9 @@ import { AuthService } from '../../services/auth.service';
   templateUrl: './header.component.html',
   styleUrl: './header.component.css'
 })
-export class HeaderComponent implements OnInit{
-  auth = inject(AuthService);
-  loggedIn: any;
-  ngOnInit() {
-    this.loggedIn = this.auth.token ? true : false
+export class HeaderComponent {
+  loggedIn: boolean;
+  constructor(private auth: AuthService) {
+    this.loggedIn = this.auth.token !== '' ? true : false
   }
 }

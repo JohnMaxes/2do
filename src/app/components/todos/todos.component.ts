@@ -55,15 +55,22 @@ interface ColumnItem {
   ],
   templateUrl: './todos.component.html',
   styleUrl: './todos.component.css',
-  providers: [DashboardService]
 })
 export class TodosComponent implements AfterViewChecked{
-  service = inject(DashboardService);
-  el = inject(ElementRef)
-  todoArray: Todo[] = this.service.todoArr;
-  todoTagList: Tag[] = this.service.todoTagList;
-  todoArrayBackup: Todo[] = this.todoArray;
+  todoArray: Todo[];
+  todoTagList: Tag[];
+  todoArrayBackup: Todo[];
   todoBackup: any;
+
+  constructor(private service: DashboardService, private el: ElementRef) {
+    this.todoArray = this.service.todoArr;
+    this.todoTagList = this.service.todoTagList;
+    this.todoArrayBackup = this.todoArray;
+    this.todoBackup = [];
+    this.listOfTags = this.todoTagList.map(
+      (index) => { return {title: index.title, checked: false}; } 
+    )
+  }
 
   ngAfterViewChecked(): void {
     const tagOptions = this.el.nativeElement.querySelectorAll('nz-option-item');
@@ -80,8 +87,6 @@ export class TodosComponent implements AfterViewChecked{
     'padding': '5px',
     'border': 'none',
   };
-
-
 
   newDate = '2025-03-05T12:34:56.789Z';
 
@@ -155,9 +160,7 @@ export class TodosComponent implements AfterViewChecked{
   }
 
   //////////////////////////////// TAG - FILTER
-  listOfTags: {title: string, checked: boolean}[] = this.todoTagList.map(
-    (index) => { return {title: index.title, checked: false}; } 
-  )
+  listOfTags: {title: string, checked: boolean}[];
 
   filter() {
     const checkedTitles = this.listOfTags

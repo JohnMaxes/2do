@@ -12,10 +12,15 @@ export class AuthService {
   token: string = '';
   tokenObj: any = {};
 
-  initialize() { // == useEffect()
+  constructor() {}
+  init() { // == useEffect()
+    console.log('auth init');
     localStorage.getItem('token') ? this.token = localStorage.getItem('token') || '' : this.token = '';
     if (this.token) {
-      this.tokenObj = jwtDecode(this.token);
+      let decodedObj: any = jwtDecode(this.token);
+      const expTime = decodedObj.exp * 1000; // Convert to milliseconds
+      const currentTime = Date.now();
+      if(expTime > currentTime) this.token = decodedObj;
     }
     console.log(this.tokenObj);
   }
@@ -69,6 +74,4 @@ export class AuthService {
     this.token = '';
     localStorage.removeItem('token');
   }
-
-  constructor() { }
 }

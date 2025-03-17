@@ -22,6 +22,20 @@ export class EditorComponent implements AfterViewChecked {
     this.isLoading = true;
   }
 
+  quillModules = {
+    toolbar: [
+      ['bold', 'italic', 'underline'],
+      ['blockquote', 'code-block'],
+      [{ 'list': 'ordered' }, { 'list': 'bullet' }],
+      [{ 'script': 'sub' }, { 'script': 'super' }],
+      [{ 'size': ['small', false, 'large', 'huge'] }], // custom dropdown
+      [{ 'color': [] }, { 'background': [] }], // dropdown with defaults
+      [{ 'font': [] }],
+      ['link', 'image', 'video'],
+      ['clean'] // remove formatting button
+    ]
+  };
+
   loadNewNote(note: Node) {
     console.log('Load new note called!');
     this.targetDocument = note;

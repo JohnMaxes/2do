@@ -13,12 +13,12 @@ import { FormsModule } from '@angular/forms';
     <app-header/>
     <router-outlet/>
   `,
-  styleUrls: ['./app.component.css']
+  styleUrls: ['./app.component.css'],
+  providers: [AuthService]
 })
 export class AppComponent implements OnInit {
-  auth = inject(AuthService);
-  router = inject(Router);
+  constructor(private auth: AuthService) {}
   ngOnInit(): void {
-    this.auth.initialize();
+    this.auth.init();
   }
 }

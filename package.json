@@ -26,6 +26,8 @@
     "ng-zorro-antd": "^19.0.2",
     "ngx-editor": "^18.0.0",
     "ngx-quill": "^27.0.1",
+    "quill-image-resize-module": "^3.0.0",
+    "quill-resize-module": "^2.0.4",
     "rxjs": "~7.8.0",
     "tslib": "^2.3.0",
     "zone.js": "~0.15.0"
