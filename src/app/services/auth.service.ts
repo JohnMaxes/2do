@@ -7,20 +7,20 @@ import { jwtDecode } from 'jwt-decode';
 @Injectable({
   providedIn: 'root'
 })
-export class AuthService {
+export class AuthService implements OnInit {
   http = inject(HttpClient); // http request maker
   token: string = '';
   tokenObj: any = {};
 
   constructor() {}
-  init() { // == useEffect()
+  ngOnInit() { // == useEffect()
     console.log('auth init');
     localStorage.getItem('token') ? this.token = localStorage.getItem('token') || '' : this.token = '';
     if (this.token) {
       let decodedObj: any = jwtDecode(this.token);
       const expTime = decodedObj.exp * 1000; // Convert to milliseconds
       const currentTime = Date.now();
-      if(expTime > currentTime) this.token = decodedObj;
+      if(expTime > currentTime) this.tokenObj = decodedObj;
     }
     console.log(this.tokenObj);
   }

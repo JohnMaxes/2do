@@ -1,0 +1,40 @@
+.sidebar-container {
+  padding: 10px;
+  box-shadow: 1px 0 7px rgba(0, 0, 0, 0.5);
+  min-height: 100vh;
+  font-size: 15px;
+  border-radius: 10px;
+  border: none;
+}
+.sidebar-container h2 {
+  margin-top: 0;
+  font-size: 22px;
+  font-weight: 600;
+  color: #1890ff;
+}
+.sidebar-container label {
+  display: block;
+  margin: 10px 0 6px 0;
+  font-size: 15px;
+}
+.sidebar-container input[type="text"], .sidebar-container input[nz-input] {
+  width: 100%;
+  padding: 6px 8px;
+  margin-top: 2px;
+  border-radius: 5px;
+  border: 1px solid #e0e0e0;
+  font-size: 15px;
+}
+.sidebar-container button {
+  margin-right: 8px;
+  margin-top: 8px;
+}
+.sidebar-container nz-tag {
+  margin-bottom: 2px;
+}
+.sidebar-container .ant-card-body {
+  padding: 0;
+}
+.sidebar-container form {
+  margin-top: 8px;
+}

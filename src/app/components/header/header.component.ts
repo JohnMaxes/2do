@@ -1,4 +1,4 @@
-import { Component, inject, OnInit } from '@angular/core';
+import { AfterViewInit, Component, inject, OnInit } from '@angular/core';
 import { AuthService } from '../../services/auth.service';
 
 @Component({
@@ -6,9 +6,11 @@ import { AuthService } from '../../services/auth.service';
   templateUrl: './header.component.html',
   styleUrl: './header.component.css'
 })
-export class HeaderComponent {
-  loggedIn: boolean;
-  constructor(private auth: AuthService) {
+export class HeaderComponent implements AfterViewInit {
+  loggedIn: boolean = false;
+  constructor(private auth: AuthService) {}
+  ngAfterViewInit(): void {
     this.loggedIn = this.auth.token !== '' ? true : false
+    console.log('header init');
   }
 }

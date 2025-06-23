@@ -1,4 +1,4 @@
-    <div style="display: flex; align-items: center; margin-left: 10px;">
+<div style="display: flex; align-items: center; margin-left: 10px;">
       <h1 style="font-size: 20px;"><b>Note Manager</b></h1>
     </div>
     <hr style="margin: 0px 10px; margin-bottom: 10px;">
@@ -13,13 +13,12 @@
     @else
     {
       <nz-tree-view [nzTreeControl]="treeControl" [nzDataSource]="dataSource" [nzDirectoryTree]="true" >
-
         <nz-tree-node *nzTreeNodeDef="let node" nzTreeNodePadding>
           <nz-tree-node-toggle nzTreeNodeNoopToggle></nz-tree-node-toggle>
           <nz-tree-node-option
             [nzDisabled]="node.disabled"
             [nzSelected]="selectListSelection.isSelected(node)"
-            (nzClick)="selectListSelection.toggle(node)"
+            (nzClick)="handleNoteSelection(node)"
           >
             <nz-icon nzType="file-text" nzTheme="outline" />
             {{ node.name }}
@@ -31,7 +30,7 @@
           <nz-tree-node-option
             [nzDisabled]="node.disabled"
             [nzSelected]="selectListSelection.isSelected(node)"
-            (nzClick)="selectListSelection.toggle(node)"
+            (nzClick)="handleNoteSelection(node)"
           >
             <nz-icon nzType="folder" nzTheme="outline" />
             {{ node.name }}
@@ -55,7 +54,7 @@
           <nz-tree-node-option
             [nzDisabled]="node.disabled"
             [nzSelected]="selectListSelection.isSelected(node)"
-            (nzClick)="selectListSelection.toggle(node)"
+            (nzClick)="handleNoteSelection(node)"
           >
             <nz-icon [nzType]="treeControl.isExpanded(node) ? 'read' : 'book'" nzTheme="outline" />
             {{ node.name }}
@@ -69,7 +68,7 @@
           <nz-tree-node-option
             [nzDisabled]="node.disabled"
             [nzSelected]="selectListSelection.isSelected(node)"
-            (nzClick)="selectListSelection.toggle(node)"
+            (nzClick)="handleNoteSelection(node)"
           >
             <nz-icon [nzType]="treeControl.isExpanded(node) ? 'read' : 'book'" nzTheme="outline" />
             {{ node.name }}
@@ -83,7 +82,7 @@
           <nz-tree-node-option
             [nzDisabled]="node.disabled"
             [nzSelected]="selectListSelection.isSelected(node)"
-            (nzClick)="selectListSelection.toggle(node)"
+            (nzClick)="handleNoteSelection(node)"
           >
             <nz-icon [nzType]="treeControl.isExpanded(node) ? 'folder-open' : 'folder'" nzTheme="outline" />
             {{ node.name }}
@@ -105,4 +104,3 @@
         </nz-tree-node>
       </nz-tree-view>
     }
-  

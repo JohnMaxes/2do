@@ -1,0 +1,65 @@
+@if(selectedTodo) {
+  <nz-card class="sidebar-container" nzTitle="Todo Details" nzBordered="false">
+    @if(!editMode) {
+      <h2 style="margin-bottom: 8px;">{{ selectedTodo!.title }}</h2>
+      <nz-divider style="margin: 8px 0;"></nz-divider>
+      <div style="margin-bottom: 8px;">
+        <b>Tags:</b>
+        <nz-select [nzOptionHeightPx]="32" [nzOptionOverflowSize]="6"	appTagColor [tagColorArray]="todoTagList" [currTags]="this.selectedTodo.tags" style="width: 100%; font-size: 12px;" nzMode="tags" nzPlaceHolder="Select tag..." [(ngModel)]="this.selectedTodo.tags">
+          @for (tag of this.todoTagList; track tag) {
+            <nz-option [nzLabel]="tag.title" [nzValue]="tag.title"></nz-option>
+          }
+        </nz-select>
+      </div>
+      <div style="margin-bottom: 8px;">
+        <b>Completed: </b>
+        <nz-tag [nzColor]="selectedTodo!.completed ? 'green' : 'red'">
+          {{ selectedTodo!.completed ? 'Yes' : 'No' }}
+        </nz-tag>
+      </div>
+      <div style="margin-bottom: 8px;">
+        <b>Created On:  </b>
+        <span>{{ selectedTodo!.createdOn | date:'dd/MM/yyyy HH:mm' }}</span>
+      </div>
+      <div *ngIf="selectedTodo.completedOn" style="margin-bottom: 8px;">
+        <b>Completed On:  </b>
+        <span>{{ selectedTodo!.completedOn | date:'dd/MM/yyyy HH:mm' }}</span>
+      </div>
+      <div style="margin-bottom: 8px">
+        <b>Description: </b>
+        <textarea [(ngModel)]="this.selectedTodo.description" nz-input placeholder="Enter description..." [nzAutosize]="{ minRows: 3 }"></textarea>
+      </div>
+      <button nz-button nzType="primary" nzBlock (click)="enableEdit()" style="margin-top: 12px;">
+        <span nz-icon nzType="edit"></span> Edit
+      </button>
+    }
+    @else {
+      <form (ngSubmit)="saveEdit()">
+        <label>
+          <span style="font-weight: 500;">Title:</span>
+          <input nz-input [(ngModel)]="editedTodo!.title" name="title" required style="margin-bottom: 8px;" />
+        </label>
+        <label>
+          <span style="font-weight: 500;">Tags:</span>
+          <input nz-input [(ngModel)]="editedTagsString" name="tags" placeholder="Comma separated" style="margin-bottom: 8px;" />
+        </label>
+        <label style="display: flex; align-items: center; margin-bottom: 8px;">
+          <span style="font-weight: 500; margin-right: 8px;">Completed:</span>
+          <label nz-checkbox [(ngModel)]="editedTodo!.completed" name="completed"></label>
+        </label>
+        <div style="margin-top: 12px;">
+          <button nz-button nzType="primary" type="submit" style="margin-right: 8px;">Save</button>
+          <button nz-button nzType="default" type="button" (click)="cancelEdit()">Cancel</button>
+        </div>
+      </form>
+    }
+  </nz-card>
+}
+@else {
+  <nz-card class="sidebar-container" nzBordered="false">
+    <p style="color: #888; text-align: center; margin: 0;">
+      <span nz-icon nzType="info-circle" style="margin-right: 6px;"></span>
+      Select a todo to see details here.
+    </p>
+  </nz-card>
+}

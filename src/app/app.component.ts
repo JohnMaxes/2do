@@ -16,9 +16,6 @@ import { FormsModule } from '@angular/forms';
   styleUrls: ['./app.component.css'],
   providers: [AuthService]
 })
-export class AppComponent implements OnInit {
+export class AppComponent {
   constructor(private auth: AuthService) {}
-  ngOnInit(): void {
-    this.auth.init();
-  }
 }

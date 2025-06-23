@@ -1,4 +1,4 @@
-import { Component, OnInit, inject } from '@angular/core';
+import { Component } from '@angular/core';
 import { User } from '../../model/user.type';
 import { DashboardService } from '../../services/dashboard.service';
 import { NzIconModule } from 'ng-zorro-antd/icon';
@@ -10,17 +10,19 @@ import { NzAvatarModule } from 'ng-zorro-antd/avatar';
   templateUrl: './account.component.html',
   styleUrl: './account.component.css',
 })
-export class AccountComponent implements OnInit {
-  service = inject(DashboardService);
-
-  constructor() { }
-
+export class AccountComponent {
   loading = true;
-  userInfo: any;
-
-  async ngOnInit() {
-    if(this.service.userInfo.id === 0) await this.service.getUserInfo();
-    else this.userInfo = this.service.userInfo;
-    this.loading = false;
+  userInfo!: User;
+  constructor(private service: DashboardService) {
+    if(this.service.userInfo.id === 0) this.service.getUserInfo()
+      .then(() => {
+        this.userInfo = this.service.userInfo;
+        this.loading = false;
+      }
+    );
+    else {
+      this.userInfo = this.service.userInfo;
+      this.loading = false;
+    }
   }
 }

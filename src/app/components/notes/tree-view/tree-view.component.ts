@@ -1,6 +1,6 @@
 import { SelectionModel } from '@angular/cdk/collections';
 import { FlatTreeControl } from '@angular/cdk/tree';
-import { Component, inject, OnInit, Output, EventEmitter, OnChanges, SimpleChanges, AfterViewChecked, ElementRef } from '@angular/core';
+import { Component, inject, OnInit, EventEmitter, OnChanges, SimpleChanges, AfterViewChecked, ElementRef, AfterViewInit, Output, OnDestroy } from '@angular/core';
 
 import { NzIconModule } from 'ng-zorro-antd/icon';
 import { NzTreeFlatDataSource, NzTreeFlattener, NzTreeViewModule } from 'ng-zorro-antd/tree-view';
@@ -9,7 +9,8 @@ import { Node } from '../../../model/node.type';
 import { DashboardService } from '../../../services/dashboard.service';
 import { FormsModule } from '@angular/forms';
 import { NzInputModule } from 'ng-zorro-antd/input';
-
+import { NotesService } from '../notes.service';
+import { Subscription } from 'rxjs';
 
 /** Flat node with expandable and level information */
 interface ExampleFlatNode {
@@ -27,24 +28,33 @@ interface ExampleFlatNode {
   imports: [NzIconModule, NzTreeViewModule, NzButtonModule, FormsModule, NzInputModule],
   templateUrl: './tree-view.component.html',
 })
-export class TreeViewComponent implements OnInit, AfterViewChecked {
+export class TreeViewComponent implements OnInit, AfterViewChecked, OnDestroy {
   isLoading = true;
-  Notes: Node[];
+  Notes: Node[] = [];
+  private notesSub: Subscription;
   /////////////////////////// Render
-  constructor (private el: ElementRef, private service: DashboardService) {
-    this.Notes = this.service.noteArr;
-    this.dataSource.setData(this.Notes);
+  constructor (
+    private el: ElementRef,
+    private service: DashboardService,
+    private notesService: NotesService
+  ) {
+    // Subscribe to notes changes
+    this.notesSub = this.notesService.notes$.subscribe(notes => {
+      this.Notes = notes;
+      this.dataSource.setData(this.Notes);
+    });
   }
 
   ngOnInit() {
     if(this.service.currentExpansionState !== undefined) {
       this.expansionState = this.service.currentExpansionState;
       this.restoreExpansionState();
-      console.log('expansion state restored from service');
-      console.log(this.expansionState);
     }
-    console.log(this.service.currentExpansionState);
     this.isLoading = false;
+  }
+
+  ngOnDestroy() {
+    this.notesSub.unsubscribe();
   }
 
   isFolder = (_:number, node: ExampleFlatNode): boolean => (node.type === 'folder');
@@ -53,10 +63,8 @@ export class TreeViewComponent implements OnInit, AfterViewChecked {
   isEmptyNotebook = (_:number, node: ExampleFlatNode): boolean => (node.type === 'notebook' && !node.expandable);
   isNote = (_:number, node: ExampleFlatNode): boolean => (node.type === 'note');
   isNewNodePreview = (_:number, node: ExampleFlatNode): boolean => (node.type === 'new');
-  //////////////////////////// Render
 
-
-  //////////////////////////// Note CRUD
+  
   //////////////////////////// Note CRUD  
   newNodeType: string = '';
   newNodeName: string = '';
@@ -77,7 +85,7 @@ export class TreeViewComponent implements OnInit, AfterViewChecked {
   }
 
   ngAfterViewChecked() {
-    let toggleButtons = this.el.nativeElement.querySelectorAll('nz-tree-node-toggle:not([myDirective])');
+    let toggleButtons = this.el.nativeElement.querySelectorAll('nz-tree-node-toggle:not([nzTreeNodeNoopToggle])');
     toggleButtons.forEach((button: HTMLElement) => {
       button.onclick = () => {
         console.log('expansion toggled');
@@ -138,86 +146,82 @@ export class TreeViewComponent implements OnInit, AfterViewChecked {
     this.saveExpansionState();
     if(this.selectListSelection.hasValue()) {
       parentId = this.selectListSelection.selected[0].id;
-      this.newNodeParentRef = this.findNodeById(this.Notes, parentId);
-      this.newNodeParentRef.children.unshift({id: 'new', name: '', type: 'new', createdAt: new Date(), updatedAt: new Date()});
-      this.dataSource.setData(this.Notes);
-      this.focusItem('new');
+      // Use recursive findNodeById
+      this.newNodeParentRef = this.findNodeById(this.notesService.getNotes(), parentId) || undefined;
+      if (this.newNodeParentRef && this.newNodeParentRef.children) {
+        this.newNodeParentRef.children.unshift({id: 'new', name: '', type: 'new', createdAt: new Date(), updatedAt: new Date()});
+      }
+      this.notesService.setNotes([...this.notesService.getNotes()]);
+      setTimeout(() => this.focusItem('new'), 0);
     }
     else {
-      this.Notes.unshift({id: 'new', name: '', type: 'new', createdAt: new Date(), updatedAt: new Date()});
-      this.dataSource.setData(this.Notes);
+      this.notesService.setNotes([
+        {id: 'new', name: '', type: 'new', createdAt: new Date(), updatedAt: new Date()},
+        ...this.notesService.getNotes()
+      ]);
+      setTimeout(() => this.focusItem('new'), 0);
     }
     this.restoreExpansionState();
     this.expandParent();
-    console.log(this.Notes);
   }
 
   handleEnterKey(event: KeyboardEvent) {
     if (event.key == 'Enter') {
       this.saveExpansionState();
       if (this.newNodeParentRef !== undefined) {
-        console.log(this.newNodeParentRef);
-        console.log('New item with type: ' + this.newNodeType + ', name: ' + this.newNodeName);
         if (this.newNodeType == 'notebook' || this.newNodeType == 'folder') {
-          this.newNodeParentRef.children.unshift({ id: 'sth', name: this.newNodeName, type: this.newNodeType, createdAt: new Date(), updatedAt: new Date(), children: [] });
+          this.notesService.addNote(
+            this.newNodeParentRef.id,
+            { id: 'sth', name: this.newNodeName, type: this.newNodeType, createdAt: new Date(), updatedAt: new Date(), children: [] }
+          );
         } else if (this.newNodeType == 'note') {
-          this.newNodeParentRef.children.unshift({ id: 'sth', name: this.newNodeName, type: this.newNodeType, createdAt: new Date(), updatedAt: new Date(), content: '' });
+          this.notesService.addNote(
+            this.newNodeParentRef.id,
+            { id: 'sth', name: this.newNodeName, type: this.newNodeType, createdAt: new Date(), updatedAt: new Date(), content: '' }
+          );
         }
+        // Remove preview node
         this.newNodeParentRef.children = this.newNodeParentRef.children.filter((note: Node) => note.id !== 'new');
-        this.dataSource.setData(this.Notes);
+        this.notesService.setNotes([...this.notesService.getNotes()]);
         this.expandParent();
       } else {
         if (this.newNodeType == 'notebook' || this.newNodeType == 'folder') {
-          this.Notes.unshift({ id: 'sth', name: this.newNodeName, type: this.newNodeType, createdAt: new Date(), updatedAt: new Date(), children: [] });
+          this.notesService.addNote(
+            null,
+            { id: 'sth', name: this.newNodeName, type: this.newNodeType, createdAt: new Date(), updatedAt: new Date(), children: [] }
+          );
         } else if (this.newNodeType == 'note') {
-          this.Notes.unshift({ id: 'sth', name: this.newNodeName, type: this.newNodeType, createdAt: new Date(), updatedAt: new Date(), content: '' });
+          this.notesService.addNote(
+            null,
+            { id: 'sth', name: this.newNodeName, type: this.newNodeType, createdAt: new Date(), updatedAt: new Date(), content: '' }
+          );
         }
-        this.Notes = this.Notes.filter((note) => note.id !== 'new');
-        this.dataSource.setData(this.Notes);
+        // Remove preview node
+        this.notesService.setNotes(this.notesService.getNotes().filter((note) => note.id !== 'new'));
       }
       this.restoreExpansionState();
-      this.focusItem('sth');
+      setTimeout(() => this.focusItem('sth'), 0);
     }
   }
 
-  removeNodeById(nodes: Node[], id: string): Node[] {
-    return nodes.filter(node => {
-      if (node.id === id) return false;
-      if (node.children) node.children = this.removeNodeById(node.children, id);
-      return true;
-    })
-  }
-  
   @Output() warnDelete = new EventEmitter<string>();
-  @Output() newNoteSelected = new EventEmitter<Node>();
-  @Output() noteDeselected = new EventEmitter();
-
-  handleNoteSelection(node: ExampleFlatNode) {
-    if(this.selectListSelection.isSelected(node)) {
-      console.log('Note deselected!');
-      this.noteDeselected.emit('');
-    }
-    else {
-      console.log('Note selected!');
-      let note = this.findNodeById(this.Notes, node.id);
-      this.newNoteSelected.emit(note);
-    }
-    this.selectListSelection.toggle(node);
-  }
 
   showDeleteWarn() {
-    this.warnDelete.emit('This action cannot be reversed. Are you sure?');
+    // Only show modal if a node is selected
+    if (this.selectListSelection.hasValue()) {
+      this.warnDelete.emit('This action cannot be reversed. Are you sure?');
+    }
   }
 
   deleteNote() {
     this.saveExpansionState();
-    let selectedId = this.selectListSelection.selected[0].id;
-    this.Notes = this.removeNodeById(this.Notes, selectedId);
-    this.noteDeselected.emit();
-    this.dataSource.setData(this.Notes);
+    let selectedId = this.selectListSelection.selected[0]?.id;
+    if (!selectedId) return;
+    this.notesService.removeNote(selectedId);
+    this.selectListSelection.clear();
     this.restoreExpansionState();
   }
-  //////////////////////////// Note CRUD
+
   //////////////////////////// Note CRUD
 
   private transformer = (node: Node, level: number): ExampleFlatNode => {
@@ -246,4 +250,24 @@ export class TreeViewComponent implements OnInit, AfterViewChecked {
   );
 
   dataSource = new NzTreeFlatDataSource(this.treeControl, this.treeFlattener);
+
+  handleNoteSelection(node: ExampleFlatNode) {
+    // Only select/deselect if not a "new" node preview
+    if (node.type === 'new') {
+      this.selectListSelection.toggle(node);
+      return;
+    }
+    if (this.selectListSelection.isSelected(node)) {
+      this.notesService.deselectNote();
+      this.service.currentSelectedNode = undefined;
+    } else {
+      // Find the node in the notes tree (deep search)
+      const found = this.findNodeById(this.Notes, node.id);
+      if (found) {
+        this.notesService.selectNote(found);
+        this.service.currentSelectedNode = found;
+      }
+    }
+    this.selectListSelection.toggle(node);
+  }
 }

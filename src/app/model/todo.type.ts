@@ -5,6 +5,7 @@ export type Todo = {
     completed: boolean,
     createdOn: Date,
     completedOn: Date | null,
+    description? : string,
 }
 
 export type Tag = {

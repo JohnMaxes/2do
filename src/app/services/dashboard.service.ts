@@ -1,7 +1,7 @@
-import { Injectable, OnInit, Signal, inject } from '@angular/core';
+import { Injectable } from '@angular/core';
 import { Tag, Todo } from '../model/todo.type';
 import { HttpClient } from '@angular/common/http';
-import { firstValueFrom } from 'rxjs';
+import { lastValueFrom } from 'rxjs';
 import { User } from '../model/user.type';
 import { AuthService } from './auth.service';
 import { Node } from '../model/node.type';
@@ -15,6 +15,7 @@ export class DashboardService {
     this.token = this.auth.token;
     this.id = this.auth.tokenObj.sub;
     this.currentExpansionState = undefined;
+    this.currentSelectedNode = undefined;
   }
 
   /////////// Profile Fetching
@@ -30,13 +31,11 @@ export class DashboardService {
   };
 
   async getUserInfo() {
-    if(!this.userInfo.id) {
-      console.log('token expired or something');
-    };
     try {
-      const response = await firstValueFrom(this.http.get<User>(`https://api.escuelajs.co/api/v1/auth/profile`, 
+      const response = await lastValueFrom(this.http.get<User>(`https://api.escuelajs.co/api/v1/auth/profile`, 
         { headers: { 'Authorization': `Bearer ${this.token}` } }
       ));
+      console.log(response);
       this.userInfo = response;
     }
     catch (error: any) {
