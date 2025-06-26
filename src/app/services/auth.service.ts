@@ -1,28 +1,26 @@
 import { inject, Injectable, OnInit, Signal, WritableSignal } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { firstValueFrom } from 'rxjs';
-import { User } from '../model/user.type';
 import { jwtDecode } from 'jwt-decode';
 
 @Injectable({
   providedIn: 'root'
 })
-export class AuthService implements OnInit {
-  http = inject(HttpClient); // http request maker
-  token: string = '';
-  tokenObj: any = {};
+export class AuthService {
+  http = inject(HttpClient);
+  token: string | null = null;
+  tokenObj: any = null;
 
-  constructor() {}
-  ngOnInit() { // == useEffect()
+  constructor() {
     console.log('auth init');
-    localStorage.getItem('token') ? this.token = localStorage.getItem('token') || '' : this.token = '';
+    this.token = localStorage.getItem('token') ? localStorage.getItem('token') : null;
     if (this.token) {
       let decodedObj: any = jwtDecode(this.token);
       const expTime = decodedObj.exp * 1000; // Convert to milliseconds
       const currentTime = Date.now();
       if(expTime > currentTime) this.tokenObj = decodedObj;
     }
-    console.log(this.tokenObj);
+    console.log(this.token);
   }
 
   baseUrl: string = 'https://api.escuelajs.co/api/v1/auth';
@@ -35,7 +33,7 @@ export class AuthService implements OnInit {
       ));
       if (response.access_token) {
         this.token = response.access_token;
-        localStorage.setItem('token', this.token);
+        localStorage.setItem('token', this.token!);
         signal.set('Okay');
         return response;
       } else {
@@ -56,7 +54,7 @@ export class AuthService implements OnInit {
       ));
       if (response.access_token) {
         this.token = response.access_token;
-        localStorage.setItem('token', this.token);
+        localStorage.setItem('token', this.token!);
         signal.set('Okay');
         return response;
       } else {

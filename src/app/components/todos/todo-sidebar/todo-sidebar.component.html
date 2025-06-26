@@ -1,5 +1,5 @@
 @if(selectedTodo) {
-  <nz-card class="sidebar-container" nzTitle="Todo Details" nzBordered="false">
+  <div class="sidebar-container">
     @if(!editMode) {
       <h2 style="margin-bottom: 8px;">{{ selectedTodo!.title }}</h2>
       <nz-divider style="margin: 8px 0;"></nz-divider>
@@ -29,9 +29,6 @@
         <b>Description: </b>
         <textarea [(ngModel)]="this.selectedTodo.description" nz-input placeholder="Enter description..." [nzAutosize]="{ minRows: 3 }"></textarea>
       </div>
-      <button nz-button nzType="primary" nzBlock (click)="enableEdit()" style="margin-top: 12px;">
-        <span nz-icon nzType="edit"></span> Edit
-      </button>
     }
     @else {
       <form (ngSubmit)="saveEdit()">
@@ -53,7 +50,7 @@
         </div>
       </form>
     }
-  </nz-card>
+  </div>
 }
 @else {
   <nz-card class="sidebar-container" nzBordered="false">

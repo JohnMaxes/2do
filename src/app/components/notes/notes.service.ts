@@ -1,6 +1,8 @@
 import { Injectable } from '@angular/core';
 import { BehaviorSubject } from 'rxjs';
 import { Node } from '../../model/node.type';
+import jsonDoc from './editor/doc';
+
 
 @Injectable({
   providedIn: 'root'
@@ -16,7 +18,7 @@ export class NotesService {
       updatedAt: new Date(),
       children: [
         { id: '2', name: 'Apple', type: 'folder', createdAt: new Date(), updatedAt: new Date(), children: [] },
-        { id: '3', name: 'Banana', type: 'note', createdAt: new Date(), updatedAt: new Date(), content: '<p>Banana content</p>' },
+        { id: '3', name: 'Banana', type: 'note', createdAt: new Date(), updatedAt: new Date(), content: jsonDoc },
         { id: '4', name: 'Fruit loops', type: 'note', createdAt: new Date(), updatedAt: new Date(), content: '<p>Fruit loops content</p>' }
       ]
     },

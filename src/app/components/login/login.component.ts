@@ -12,7 +12,7 @@ import { Router } from '@angular/router';
   selector: 'app-login',
   imports: [NzInputModule, NzButtonModule, FormsModule, NzIconModule, ReactiveFormsModule],
   templateUrl: './login.component.html',
-  styleUrl: './login.component.css'
+  styleUrl: './login.component.scss'
 })
 export class LoginComponent {
   http = inject(HttpClient);

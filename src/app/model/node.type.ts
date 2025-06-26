@@ -13,7 +13,7 @@ interface BaseNode {
   
   interface NoteNode extends BaseNode {
     type: 'note';
-    content: string;
+    content: string | Record<string, any>;
     children?: never; // TextNode cannot have children
   }
   

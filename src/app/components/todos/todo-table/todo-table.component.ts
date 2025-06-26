@@ -1,23 +1,36 @@
 import { Component, ElementRef, AfterViewChecked, ViewChild } from '@angular/core';
-import { DashboardService } from '../../services/dashboard.service';
-import { TodoService } from './todo.service';
-import { Tag, Todo } from '../../model/todo.type';
-import { ModalComponent } from '../modal/modal.component';
+import { DashboardService } from '../../../services/dashboard.service';
+import { TodoService } from '../todo.service';
+import { Tag, Todo } from '../../../model/todo.type';
+import { NzButtonModule } from 'ng-zorro-antd/button';
+import { NzDividerModule } from 'ng-zorro-antd/divider';
+import { NzTableModule } from 'ng-zorro-antd/table';
+import { NzCheckboxModule } from 'ng-zorro-antd/checkbox';
+import { NzInputModule } from 'ng-zorro-antd/input';
+import { FormsModule } from '@angular/forms';
+import { NzIconModule } from 'ng-zorro-antd/icon';
+import { NzSelectModule } from 'ng-zorro-antd/select';
+import { NzToolTipModule } from 'ng-zorro-antd/tooltip';
+import { ScrollingModule } from '@angular/cdk/scrolling';
 import { NgStyleInterface } from 'ng-zorro-antd/core/types';
-import { TodoSidebarComponent } from './todo-sidebar/todo-sidebar.component';
-import { NzSplitterModule } from 'ng-zorro-antd/splitter';
-import { TodoTableComponent } from './todo-table/todo-table.component';
+import { NzTagModule } from 'ng-zorro-antd/tag';
+import { TagColorDirective } from '../tag-color.directive';
+import { DatePipe } from '@angular/common';
+import { NzDropDownModule } from 'ng-zorro-antd/dropdown';
 
 @Component({
-  selector: 'app-todos',
+  selector: 'app-todo-table',
   imports: [
-    TodoTableComponent, ModalComponent,
-    TodoSidebarComponent, NzSplitterModule,
+    NzToolTipModule, ScrollingModule, NzTagModule,
+    DatePipe, TagColorDirective, NzDropDownModule,
+    NzButtonModule, NzDividerModule, NzTableModule, 
+    NzCheckboxModule, NzInputModule, FormsModule, 
+    NzIconModule, NzSelectModule
   ],
-  templateUrl: './todos.component.html',
-  styleUrl: './todos.component.css',
+  templateUrl: './todo-table.component.html',
+  styleUrl: './todo-table.component.css'
 })
-export class TodosComponent implements AfterViewChecked{
+export class TodoTableComponent {
   todoArray: Todo[] = [];
   todoTagList: Tag[];
   todoArrayBackup: Todo[] = [];
@@ -25,13 +38,13 @@ export class TodosComponent implements AfterViewChecked{
 
   selectedTodoId: string | null = null;
 
-  constructor(
+  constructor( 
     private dashboardService: DashboardService,
     private el: ElementRef,
     private todoService: TodoService
-  ) {
+   ) {
     // Use TodoService for todos
-    this.todoTagList = this.dashboardService.todoTagList;
+    this.todoTagList = todoService.todoTagList;
     this.todoService.todos$.subscribe(todos => {
       this.todoArray = todos;
       this.todoArrayBackup = todos;

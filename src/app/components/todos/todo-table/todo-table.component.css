@@ -82,5 +82,3 @@ input.invalid:hover {
 .selected-row {
     border-left: 4px solid #1890ff;
 }
-
-/* No vh/vw on containers; let parent flexbox handle sizing */

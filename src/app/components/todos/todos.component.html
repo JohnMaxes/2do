@@ -1,95 +1,14 @@
 @if (showModal) {
   <app-modal [message]="modalMessage" (response)="handleModalResponse($event) "></app-modal>
 }
-<nz-splitter [nzType]="'horizontal'" [nzUnit]="'percent'" [nzMin]="[20, 20]" [nzMax]="[80, 80]" [nzCollapsed]="[false, false]" style="height: 100vh;">
-  <nz-splitter-area [nzSize]="75">
-    <div style="overflow-y:hidden; width: calc(100% - 5px); height: 100%; display: flex; flex-direction: row; margin-left: 5px">
-      <div style="width: 75%; height: 100%; padding: 5px">
 
-        <div style="height: 20%; width: calc(100% - 10px);">
-          <h1 style="font-size: 20px; border: 2px solid black;"><b>Todo Manager</b></h1>
-        </div>
-
-        <div style="height: 80%; width: 100%;" #todoDiv>
-          <nz-table
-          #somethingTable
-          nzSize="small"
-          [nzScroll]="{ y: '60vh'}"
-          [nzData]="[{}]"
-          [nzLoadingDelay]="50"
-          style="height: 100%; width: 100%; font-size: 12px;"
-          nzFrontPagination="false"
-          >
-            <thead>
-              <tr>
-                <th nzWidth="5%"><label nz-checkbox (change)="toggleSelectAll()"></label></th>
-                <th nzWidth="40%" style="text-align:left; padding-left: 20px;">Todo</th>
-                <th nzWidth="30%">
-                  <div style="display: inline-flex; width: 100%">
-                    <div style="width: 90%;">
-                      Tags
-                    </div>
-                    <div style="width: 10%; display: flex; justify-items: center; align-items: center;" >
-                      <a nz-dropdown [nzDropdownMenu]="menu" nzPlacement="bottomRight" nzClickHide="false">
-                        <nz-icon nzType="filter" nzTheme="outline" style="transform: scale(1.1);"/>
-                      </a>
-                      <nz-dropdown-menu #menu="nzDropdownMenu">
-                        <ul nz-menu>
-                          @for (tag of this.listOfTags; track tag) {
-                            <li nz-menu-item><label (nzCheckedChange)="filter()" nz-checkbox [(ngModel)]="tag.checked" style="font-size: 12px">{{tag.title}}</label></li>
-                          }  
-                        </ul>
-                      </nz-dropdown-menu>
-                    </div>
-                    </div>
-                </th>
-                <th nzWidth="15%">Created On</th>
-                <th nzWidth="10%" style="text-align: left">Action</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr class="editable-row">
-                <td nzAlign="center"><label nz-checkbox nzDisabled="true"></label></td>
-                <td><input (keyup)="handleEnterKey($event)" placeholder="Enter a new Todo here..." type="text" nz-input [(ngModel)]="this.newTodoTitle" [class.invalid]="(this.newTodoTitle == '' && this.newTodoTitleInvalid)" nz-tooltip nzTooltipTitle="Title cannot be empty!" [nzTooltipTrigger]="null" nzTooltipColor="red" [nzTooltipVisible]="this.newTodoTitleInvalid" [nzTooltipOverlayStyle]="dynamicTooltipStyles"/></td>
-                <td><input (keyup)="handleEnterKey($event)" placeholder="Enter tags..." type="text" nz-input [(ngModel)]="this.newTodoCategory"/></td>
-                <td></td>
-                <td>
-                  <button nz-button nzType="primary" class="todo-create-button" (click)="addItem()">C</button>
-                </td>
-              </tr>
-            @for (data of this.todoArray; track data) {
-              <tr class="editable-row"
-                  [class.selected-row]="data.id === selectedTodoId"
-                  (click)="onRowClick(data)">
-                <td style="padding: 4px" nzAlign="center" (click)="$event.stopPropagation()">
-                  <label nz-checkbox [nzChecked]="this.selectedArr.includes(data.id) ? true : false" (change)="toggleSelect(data.id)"></label>
-                </td>
-                <td>
-                  <input type="text" [class.invalid]="(data.title == '')" nz-input [(ngModel)]="data.title" nz-tooltip [nzTooltipVisible]="data.title == '' ? true : false" [nzTooltipTrigger]="null" nzTooltipTitle="Title cannot be empty!" nzTooltipColor="red" [nzTooltipOverlayStyle]="dynamicTooltipStyles">
-                </td>
-                <td>
-                  <nz-select [nzOptionHeightPx]="32" [nzOptionOverflowSize]="6"	appTagColor [tagColorArray]="todoTagList" [currTags]="data.tags" style="width: 100%; font-size: 12px;" nzMode="tags" nzPlaceHolder="Select tag..." [(ngModel)]="data.tags">
-                    @for (tag of this.todoTagList; track tag) {
-                      <nz-option [nzLabel]="tag.title" [nzValue]="tag.title"></nz-option>
-                    }
-                  </nz-select>
-                </td>
-                <td nzAlign="center" style="font-size: 10px;">{{data.createdOn | date:'dd/MM/yy hh:mm'}}</td>
-                <td>
-                  <div style="display: flex; flex-direction: row;">
-                    <nz-icon title="Mark this todo as Done" class="todo-action-icon" nzType="check-circle" nzTheme="twotone" nzTwotoneColor="#4CAF50"/>
-                    <nz-icon title="Delete this todo forever" (click)="deleteItem(data.id)" class="todo-action-icon" nzType="delete" nzTheme="twotone" nzTwotoneColor="#FF3B3B"/>
-                  </div>
-                </td>
-              </tr>
-            }
-            </tbody>
-          </nz-table>  
-        </div>
-      </div>
-    </div>
-  </nz-splitter-area>
-  <nz-splitter-area [nzSize]="25">
-    <app-todo-sidebar></app-todo-sidebar>
-  </nz-splitter-area>
-</nz-splitter>
+<div style="display: flex; flex-direction: column; flex: 1 1 0; min-height: 0; height: 100%; padding-left: 5px">
+  <nz-splitter style="flex: 1 1 0; min-height: 0; border: none; outline: none">
+    <nz-splitter-panel style="border: none; outline: none" nzDefaultSize="75%" nzMin="50%">
+      <app-todo-table></app-todo-table>
+    </nz-splitter-panel>
+    <nz-splitter-panel style="border: none; outline:none; padding-left: 10px;" nzDefaultSize="25%" nzMax="50%" nzMin="15%">
+      <app-todo-sidebar></app-todo-sidebar>
+    </nz-splitter-panel>
+  </nz-splitter>
+</div>

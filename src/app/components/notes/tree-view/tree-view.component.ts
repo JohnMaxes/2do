@@ -1,6 +1,6 @@
 import { SelectionModel } from '@angular/cdk/collections';
 import { FlatTreeControl } from '@angular/cdk/tree';
-import { Component, inject, OnInit, EventEmitter, OnChanges, SimpleChanges, AfterViewChecked, ElementRef, AfterViewInit, Output, OnDestroy } from '@angular/core';
+import { Component, OnInit, EventEmitter, AfterViewChecked, ElementRef, Output, OnDestroy } from '@angular/core';
 
 import { NzIconModule } from 'ng-zorro-antd/icon';
 import { NzTreeFlatDataSource, NzTreeFlattener, NzTreeViewModule } from 'ng-zorro-antd/tree-view';
@@ -101,14 +101,10 @@ export class TreeViewComponent implements OnInit, AfterViewChecked, OnDestroy {
 
   findNodeById(nodes: Node[], id: string): Node | undefined {
     for (const node of nodes) {
-      if (node.id === id) {
-        return node;
-      }
+      if (node.id === id) return node;
       if (node.children) {
         const found = this.findNodeById(node.children, id);
-        if (found) {
-          return found;
-        }
+        if (found) return found;
       }
     }
     return undefined;

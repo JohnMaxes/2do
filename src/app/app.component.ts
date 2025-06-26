@@ -1,20 +1,21 @@
-import { Component, inject, OnInit } from '@angular/core';
+import { Component } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
 import { HeaderComponent } from './components/header/header.component';
 import { AuthService } from './services/auth.service';
-import { Router } from '@angular/router';
 import { FormsModule } from '@angular/forms';
 
 @Component({
   selector: 'app-root',
-  standalone: true,
   imports: [RouterOutlet, HeaderComponent, FormsModule],
   template: `
-    <app-header/>
-    <router-outlet/>
+    <div style="display: flex; flex-direction: column; height: 100vh; width: 100vw">
+      <app-header></app-header>
+      <div style="flex: 1 1 0; min-height: 0;">
+        <router-outlet></router-outlet>
+      </div>
+    </div>
   `,
-  styleUrls: ['./app.component.css'],
-  providers: [AuthService]
+  styleUrls: ['./app.component.scss'],
 })
 export class AppComponent {
   constructor(private auth: AuthService) {}

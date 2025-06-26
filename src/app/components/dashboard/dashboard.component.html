@@ -1,21 +1,21 @@
-<div style="display: flex; width: 100vw; flex-direction: row;">
-  <div style="height: 88vh; background-color: white; width:fit-content; box-shadow: 1px 0 7px rgba(0, 0, 0, 0.5);">
+<div style="display: flex; flex-direction: row; height: 100%; min-height: 0;">
+  <div style="background-color: white; width: fit-content; box-shadow: 4px 0 5px rgba(0, 0, 0, 0.2);">
     <ul nz-menu nzTheme="light">
         <li nz-menu-item nzMatchRouter="true" routerLink="todos">
-          <nz-icon nzType="form" style="transform: scale(2.5);"></nz-icon>
+          <nz-icon nzType="form" style="transform: scale(1.75);"></nz-icon>
         </li>
         <li nz-menu-item nzMatchRouter="true" routerLink="notes">
-          <nz-icon nzType="book" style="transform: scale(2.5);"></nz-icon>
+          <nz-icon nzType="book" style="transform: scale(1.75);"></nz-icon>
         </li>
         <li nz-menu-item nzMatchRouter="true" routerLink="account">
-          <nz-icon nzType="user" style="transform: scale(2.5);"></nz-icon>
+          <nz-icon nzType="user" style="transform: scale(1.75);"></nz-icon>
         </li>
         <li nz-menu-item nzMatchRouter="true" routerLink="settings">
-          <nz-icon nzType="setting" style="transform: scale(2.5);"></nz-icon>
+          <nz-icon nzType="setting" style="transform: scale(1.75);"></nz-icon>
         </li>
     </ul>
   </div>
-  <div style="display: flex; height: 88vh; width: 100%; overflow-y: hidden;">
+  <div style="display: flex; flex: 1 1 0; min-width: 0;">
     <router-outlet></router-outlet>
   </div>
 </div>

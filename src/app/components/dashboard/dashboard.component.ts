@@ -9,7 +9,7 @@ import { DashboardService } from '../../services/dashboard.service';
   imports: [NzMenuModule, NzIconModule, RouterOutlet, RouterLink],
   templateUrl: './dashboard.component.html',
   styleUrl: './dashboard.component.css',
-  providers: [DashboardService]
+  providers: [DashboardService],
 })
 export class DashboardComponent {
   constructor(private service: DashboardService) {

@@ -1,0 +1,27 @@
+::ng-deep .ProseMirror ul,
+::ng-deep .ProseMirror ol {
+  margin-left: 2em !important;
+  padding-left: 1.5em !important;
+  list-style-position: outside !important; /* changed from inside to outside */
+}
+
+::ng-deep .ProseMirror li {
+  margin-bottom: 0.25em !important;
+  list-style-type: inherit !important;
+  display: list-item !important; /* ensure default list-item display */
+}
+
+::ng-deep .editorContainer ngx-editor-menu {
+  position: sticky;
+  top: 0;
+  z-index: 10;
+}
+
+/* Add a border-bottom to the editor menu */
+.NgxEditor__MenuBar {
+  border-bottom: 1px solid rgba(0, 0, 0, 0.2);
+}
+
+.NgxEditor {
+  border: none;
+}

@@ -12,7 +12,7 @@ export class DashboardService {
   id: string;
   constructor(private auth: AuthService, private http: HttpClient) {
     console.log('service init!');
-    this.token = this.auth.token;
+    this.token = this.auth.token!;
     this.id = this.auth.tokenObj.sub;
     this.currentExpansionState = undefined;
     this.currentSelectedNode = undefined;

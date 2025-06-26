@@ -2,8 +2,8 @@ ul[nz-menu] li[nz-menu-item].ant-menu-item {
     display: flex;
     justify-content: center;
     align-items: center;
-    height: 65px;
-    width: 65px;
+    height: 55px;
+    width: 55px;
     margin: 0;
     transition: background-color 0.2s;
 }
